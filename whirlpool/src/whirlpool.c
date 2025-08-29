@@ -9,7 +9,7 @@ static void whirlpool_init( t_whirlpool_ctx *ctx )
 	ctx->buffer_len = 0;
 }
 
-static void whirlpool_transform(t_whirlpool_ctx *ctx)
+static void whirlpool_transform( t_whirlpool_ctx *ctx )
 {
 	static const uint64_t RC[10] = {
 		0x1823c6e887b8014f, 0x36a6d2f5796f9152, 0x60bc9b8ea30c7b35, 0x1de0d7c22e4bfe57, 0x157737e59ff04ada,
