@@ -6,7 +6,7 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 11:47:04 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/04/02 10:12:27 by maecarva         ###   ########.fr       */
+/*   Updated: 2025/09/01 14:46:03 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 # define STRING_H
 
 # include <stdlib.h>
-# include "char.h"
+// # include "char.h"
 # include <stdbool.h>
 
 # define WHITESPACES " \n\t\v\f\r"
 
-bool	ft_str_charset(char *str, char *charset);
 char	*ft_strchr(const char *s, int c);
 int		ft_strcmp(char *src1, char *src2);
 size_t	ft_strcpy(char *dest, const char *src);

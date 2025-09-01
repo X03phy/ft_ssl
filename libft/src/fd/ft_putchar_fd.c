@@ -1,27 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   safe.h                                             :+:      :+:    :+:   */
+/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/28 12:27:44 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/04/01 15:27:14 by ebonutto         ###   ########.fr       */
+/*   Created: 2024/11/06 11:15:00 by ebonutto          #+#    #+#             */
+/*   Updated: 2025/04/01 13:31:06 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SAFE_H
-# define SAFE_H
+#include "../../include/fd.h"
 
-# include <stdlib.h>
-# include <unistd.h>
-# include "fd.h"
-# include <stdio.h>
+/*
+Prototype
+	void ft_putchar_fd(char c, int fd);
 
-void	ft_close(int *fd);
-void	ft_dfree(char ***split);
-void	ft_error(char *str, int exit_status);
-void	ft_perror(char *str, int exit_status);
-void	ft_sfree(void **ptr);
+Description
+	Outputs the character ’c’ to the given file
+	descriptor.
 
-#endif
+Parameters
+	#1. The character to output.
+	#2. The file descriptor on which to write.
+
+Return value
+	None
+*/
+
+void	ft_putchar_fd(char c, int fd)
+{
+	write(fd, &c, 1);
+}

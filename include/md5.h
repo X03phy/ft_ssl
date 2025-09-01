@@ -7,8 +7,6 @@
 /* For size_t */
 #include <stddef.h>
 
-#include <string.h>
-
 #define F(x, y, z) ((x & y) | (~x & z))
 #define G(x, y, z) ((x & z) | (y & ~z))
 #define H(x, y, z) (x ^ y ^ z)

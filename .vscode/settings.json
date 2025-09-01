@@ -1,0 +1,9 @@
+{
+	"files.associations": {
+		"char.h": "c",
+		"get_next_line.h": "c",
+		"libft.h": "c",
+		"string.h": "c",
+		"float.h": "c"
+	}
+}
