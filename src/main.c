@@ -17,7 +17,7 @@ static void print_invalid_flag( char *flag )
 	ft_putstr_fd( "' is an invalid flag.\n", 2 );
 }
 
-typedef struct s_options {
+typedef struct s_opts {
     int flag_p;
     int flag_q;
     int flag_r;
@@ -26,9 +26,9 @@ typedef struct s_options {
     int  strings_count;
     char **files;   // tableau de fichiers
     int  files_count;
-} t_options;
+} t_opts;
 
-int parse_input(int argc, char **argv, t_options *opts)
+int parse_input(int argc, char **argv, t_opts *opts)
 {
     int i = 2; // argv[1] = commande
 
@@ -80,7 +80,7 @@ static void print_help( void )
 
 int main( int argc, char **argv )
 {
-	t_options opts;
+	t_opts opts;
 
 	if ( argc < 2 ) {
 		ft_putstr_fd( "usage: ft_ssl command [flags] [file/string]\n", 2 );
