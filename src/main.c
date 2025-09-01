@@ -5,14 +5,17 @@
 #define FLAG_S 8
 
 #include <stdio.h>
+#include <unistd.h>
+#include "get_next_line.h"
 
 int main( int argc, char **argv )
 {
-	if ( argc < 2 ) {
-		write( 2, "usage: ft_ssl command [flags] [files...]\n", 42 );
-		return ( 1 );
-	}
-
-
-	return ( 0 );
+	(void)argc;
+	(void)argv;
+	char *line = NULL;
+	int len = 0;
+	get_next_line(&line, &len, 0);
+	printf("%s\n", line);
+	free(line);
+	return (0);
 }

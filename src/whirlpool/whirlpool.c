@@ -2,8 +2,8 @@
 
 static void whirlpool_init( t_whirlpool_ctx *ctx )
 {
-	memset( ctx->buffer, 0, sizeof( ctx->buffer ) );
-	memset( ctx->state, 0, sizeof( ctx->state ) );
+	ft_memset( ctx->buffer, 0, sizeof( ctx->buffer ) );
+	ft_memset( ctx->state, 0, sizeof( ctx->state ) );
 
 	ctx->bitlen = 0;
 	ctx->buffer_len = 0;
