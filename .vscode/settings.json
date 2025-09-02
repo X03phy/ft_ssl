@@ -4,6 +4,9 @@
 		"get_next_line.h": "c",
 		"libft.h": "c",
 		"string.h": "c",
-		"float.h": "c"
+		"float.h": "c",
+		"ft_ssl.h": "c",
+		"fd.h": "c",
+		"linked_list.h": "c"
 	}
 }
