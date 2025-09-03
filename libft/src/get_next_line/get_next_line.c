@@ -69,6 +69,8 @@ ssize_t get_next_line( char **lineptr, int *n, int fd )
 	if ( !lineptr || !n || fd < 0 || BUFSIZ <= 0 )
 		return ( -1 );
 
+	*n = 0;
+
 	*lineptr = ft_calloc( 1, sizeof(char) );
 	if ( !*lineptr )
 		return ( -1 );
