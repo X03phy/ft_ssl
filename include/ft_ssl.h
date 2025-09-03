@@ -18,6 +18,17 @@ typedef struct s_opts {
 	int    files_count;
 } t_opts;
 
+/* Function pointer type for commands */
+typedef void ( *t_cmd_func )( t_opts * );
+
+typedef struct s_cmd {
+	char             *name;
+	const t_cmd_func func;
+} t_cmd;
+
+/* Global Variables */
+extern t_cmd g_cmds[];
+
 /* Prototypes */
 /* Clear */
 void opts_clear( t_opts *opts );
@@ -26,9 +37,11 @@ void opts_clear( t_opts *opts );
 void print_help( void );
 void print_invalid_command( char *cmd );
 void print_invalid_flag( char *flag );
+void print_func_failed( char *func );
 
 /* Parsing */
-int parse_input( int argc, char **argv, t_opts *opts );
+t_cmd_func get_cmd( char *cmd );
+int        parse_input( int argc, char **argv, t_opts *opts );
 
 /* Wrappers */
 void md5_wrapper( t_opts *opts );
