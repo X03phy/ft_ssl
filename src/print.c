@@ -14,6 +14,7 @@ void print_help( void )
 
 void print_invalid_command( char *cmd )
 {
+	
 	ft_putstr_fd( "ft_ssl: Error: '", 2 );
 	ft_putstr_fd( cmd, 2 );
 	ft_putstr_fd( "' is an invalid command.\n", 2 );
@@ -24,4 +25,11 @@ void print_invalid_flag( char *flag )
 	ft_putstr_fd( "ft_ssl: Error: '", 2 );
 	ft_putstr_fd( flag, 2 );
 	ft_putstr_fd( "' is an invalid flag.\n", 2 );
+}
+
+void print_func_failed( char *func )
+{
+	ft_putstr_fd( "ft_ssl: Error: '", 2 );
+	ft_putstr_fd( func, 2 );
+	ft_putstr_fd( "' failed.\n", 2 );
 }
