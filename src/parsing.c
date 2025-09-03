@@ -1,5 +1,15 @@
 #include "ft_ssl.h"
 
+t_cmd_func get_cmd( char *cmd )
+{
+	for ( int i = 0; g_cmds[i].name; ++i ) {
+		if ( ft_strcmp( g_cmds[i].name, cmd ) == 0 )
+			return ( g_cmds[i].func );
+	}
+	print_invalid_command( cmd );
+	return ( NULL );
+}
+
 int parse_input( int argc, char **argv, t_opts *opts )
 {
 	int    i = 2; // argv[1] = commande
@@ -7,7 +17,7 @@ int parse_input( int argc, char **argv, t_opts *opts )
 
 	ft_memset( opts, 0, sizeof(*opts) );
 
-	while (i < argc) {
+	while ( i < argc ) {
 		if ( argv[i][0] == '-' ) {
 			if ( ft_strcmp( argv[i], "-p" ) == 0 )
 				opts->flags |= 1 << FLAG_P;
@@ -23,7 +33,7 @@ int parse_input( int argc, char **argv, t_opts *opts )
 				// stocker la string associée à -s
 				tmp = ft_lstnew( argv[++i] );
 				if ( !tmp ) {
-					perror( "ft_lstnew()" );
+					print_func_failed( "ft_lstnew()" );
 					return ( 0 );
 				}
 				ft_lstadd_back( &opts->strings, tmp );
@@ -37,7 +47,7 @@ int parse_input( int argc, char **argv, t_opts *opts )
 			// ici c’est un fichier
 			tmp = ft_lstnew( argv[i] );
 			if ( !tmp ) {
-				perror( "ft_lstnew()" );
+				print_func_failed( "ft_lstnew()" );
 				return ( 0 );
 			}
 			ft_lstadd_back( &opts->files, tmp );
