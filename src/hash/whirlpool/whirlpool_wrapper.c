@@ -1,7 +1,7 @@
 #include "ft_ssl.h"
 #include "md5.h"
 
-void whirlpool_wrapper( t_opts *opts )
+void whirlpool_wrapper( t_ssl_ctx *ssl_ctx )
 {
-	(void)opts;
+	(void)ssl_ctx;
 }

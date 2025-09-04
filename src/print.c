@@ -33,3 +33,10 @@ void print_func_failed( char *func )
 	ft_putstr_fd( func, 2 );
 	ft_putstr_fd( "' failed.\n", 2 );
 }
+
+void print_hash( uint8_t *hash, int len )
+{
+	for ( int i = 0; i < len; ++i )
+		printf( "%02x", hash[i] );
+	printf( "\n" );
+}

@@ -3,7 +3,7 @@
 int main( int argc, char **argv )
 {
 	t_cmd_func wrapper;
-	t_opts opts;
+	t_ssl_ctx ssl_ctx;
 
 	if ( argc < 2 ) {
 		ft_putstr_fd( "usage: ft_ssl command [flags] [file/string]\n", 2 );
@@ -21,16 +21,16 @@ int main( int argc, char **argv )
 		return ( 1 );
 	}
 
-	if ( !parse_input( argc, argv, &opts ) ) {
-		opts_clear( &opts );
+	if ( !parse_input( argc, argv, &ssl_ctx ) ) {
+		ssl_ctx_clear( &ssl_ctx );
 		print_help();
 		return ( 1 );
 	}
 
-	wrapper(&opts);
+	wrapper(&ssl_ctx);
 
 
 
-	opts_clear( &opts );
+	ssl_ctx_clear( &ssl_ctx );
 	return (0);
 }

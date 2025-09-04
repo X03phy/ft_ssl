@@ -1,7 +1,7 @@
 #include "ft_ssl.h"
 
-void opts_clear( t_opts *opts )
+void ssl_ctx_clear( t_ssl_ctx *ssl_ctx )
 {
-	ft_lstfree( &opts->strings );
-	ft_lstfree( &opts->files );
+	ft_lstfree( &ssl_ctx->strings );
+	ft_lstfree( &ssl_ctx->files );
 }
