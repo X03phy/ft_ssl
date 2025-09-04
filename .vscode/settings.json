@@ -7,6 +7,7 @@
 		"float.h": "c",
 		"ft_ssl.h": "c",
 		"fd.h": "c",
-		"linked_list.h": "c"
+		"linked_list.h": "c",
+		"sha256.h": "c"
 	}
 }

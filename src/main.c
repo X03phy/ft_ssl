@@ -10,7 +10,7 @@ int main( int argc, char **argv )
 		return ( 1 );
 	}
 
-	if ( argc == 2 && ft_strcmp( "help", argv[1] ) ) {
+	if ( argc == 2 && ft_strcmp( "help", argv[1] ) == 0 ) {
 		print_help();
 		return ( 0 );
 	}
@@ -27,7 +27,7 @@ int main( int argc, char **argv )
 		return ( 1 );
 	}
 
-
+	wrapper(&opts);
 
 
 
