@@ -1,37 +1,47 @@
 #ifndef FT_SSL_H
 #define FT_SSL_H
 
+#include "color_code.h"
 #include "libft.h"
 
-/* Macros */
-#define FLAG_P 0
-#define FLAG_Q 1
-#define FLAG_R 2
+
+/* Enums */
+typedef enum e_cmd_type {
+	CMD_HASH,
+	CMD_CIPHER
+} t_cmd_type;
 
 /* Structures */
-/* Options */
-typedef struct s_ssl_ctx {
-	int    flags;
-	char   *input;
-	size_t len;
-	t_list *strings; // tableau de chaînes après -s
-	t_list *files;   // tableau de fichiers
-} t_ssl_ctx;
+/* Commands */
+typedef struct s_ssl_cmd {
+	const char *name;
+	t_cmd_type type;
+	union {
+		struct {
+			size_t hash_size;
+			void ( *hash_func )( const uint8_t *, size_t, uint8_t * );
+		} hash;
+		struct {
+			int key_size;
+			void ( *encrypt )( const uint8_t *, size_t, const uint8_t *, uint8_t * );
+			void ( *decrypt )( const uint8_t *, size_t, const uint8_t *, uint8_t * );
+		} cipher;
+	};
+} t_ssl_cmd;
+
 
 /* Function pointer type for commands */
-typedef void ( *t_cmd_func )( t_ssl_ctx * );
+typedef int ( *t_ssl_wfunc )( int, char **, t_ssl_cmd * );
 
-typedef struct s_cmd {
-	char             *name;
-	const t_cmd_func func;
-} t_cmd;
 
 /* Global Variables */
-extern t_cmd g_cmds[];
+extern t_ssl_cmd g_cmds[];
+
+
+int hash_wrapper( int argc, char **argv, t_ssl_cmd *cmd );
 
 /* Prototypes */
 /* Clear */
-void ssl_ctx_clear( t_ssl_ctx *ssl_ctx );
 
 /* Print */
 void print_help( void );
@@ -39,17 +49,15 @@ void print_invalid_command( char *cmd );
 void print_invalid_flag( char *flag );
 void print_func_failed( char *func );
 void print_hash( uint8_t *hash, int len );
+void print_algo_input( char *algo, const char *input );
 
 /* Utils */
 int get_input_fd( int fd, char **lineptr, size_t *n );
 
 /* Parsing */
-t_cmd_func get_cmd( char *cmd );
-int        parse_input( int argc, char **argv, t_ssl_ctx *ssl_ctx );
+t_ssl_wfunc parse_cmd( t_ssl_cmd *cmd );
 
-/* Wrappers */
-void md5_wrapper( t_ssl_ctx *ssl_ctx );
-void sha256_wrapper( t_ssl_ctx *ssl_ctx );
-void whirlpool_wrapper( t_ssl_ctx *ssl_ctx );
+/* Wrapper */
+
 
 #endif
