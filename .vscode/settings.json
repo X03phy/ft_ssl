@@ -8,6 +8,8 @@
 		"ft_ssl.h": "c",
 		"fd.h": "c",
 		"linked_list.h": "c",
-		"sha256.h": "c"
+		"sha256.h": "c",
+		"color_code.h": "c",
+		"typeinfo": "c"
 	}
 }
