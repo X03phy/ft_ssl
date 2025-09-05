@@ -6,13 +6,13 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 16:37:25 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/09/01 11:05:31 by ebonutto         ###   ########.fr       */
+/*   Updated: 2025/09/05 18:26:11 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "string.h"
 
-int	ft_strcmp(char *src1, char *src2)
+int	ft_strcmp(const char *src1, const char *src2)
 {
 	int	i;
 

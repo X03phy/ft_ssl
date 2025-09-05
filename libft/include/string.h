@@ -6,7 +6,7 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 11:47:04 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/09/01 14:46:03 by ebonutto         ###   ########.fr       */
+/*   Updated: 2025/09/05 18:26:00 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # define WHITESPACES " \n\t\v\f\r"
 
 char	*ft_strchr(const char *s, int c);
-int		ft_strcmp(char *src1, char *src2);
+int		ft_strcmp(const char *src1, const char *src2);
 size_t	ft_strcpy(char *dest, const char *src);
 char	*ft_strdup(const char *src);
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));

@@ -6,7 +6,7 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 16:49:35 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/09/02 13:32:31 by ebonutto         ###   ########.fr       */
+/*   Updated: 2025/09/05 17:30:15 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,5 @@
 #include "fd.h"
 #include "get_next_line.h"
 #include "linked_list.h"
-
 
 #endif
