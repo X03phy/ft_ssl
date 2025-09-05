@@ -2,8 +2,10 @@
 
 int main( int argc, char **argv )
 {
-	t_cmd_func wrapper;
-	t_ssl_ctx ssl_ctx;
+	t_ssl_wfunc wfunc = NULL;
+	t_ssl_cmd   cmd;
+	
+	ft_memset( &cmd, 0, sizeof(t_ssl_cmd) );
 
 	if ( argc < 2 ) {
 		ft_putstr_fd( "usage: ft_ssl command [flags] [file/string]\n", 2 );
@@ -15,22 +17,10 @@ int main( int argc, char **argv )
 		return ( 0 );
 	}
 
-	wrapper = get_cmd( argv[1] );
-	if ( !wrapper ) {
-		print_help();
+	cmd.name = argv[1];
+	wfunc = parse_cmd( &cmd );
+	if ( !wfunc )
 		return ( 1 );
-	}
 
-	if ( !parse_input( argc, argv, &ssl_ctx ) ) {
-		ssl_ctx_clear( &ssl_ctx );
-		print_help();
-		return ( 1 );
-	}
-
-	wrapper(&ssl_ctx);
-
-
-
-	ssl_ctx_clear( &ssl_ctx );
-	return (0);
+	return ( wfunc( argc, argv, &cmd ) );
 }
