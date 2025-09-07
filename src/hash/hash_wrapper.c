@@ -109,7 +109,10 @@ static void hash_input( t_ssl_cmd *cmd, t_ssl_hash_ctx *ctx, uint8_t *hash )
 			if ( flag_active( ctx->flags, FLAG_P ) )
 				print_hash_input( ctx->input, NULL, 1, 1 );
 			else if ( !flag_active( ctx->flags, FLAG_R ) )
+			{
+				ft_putstr_fd( cmd->name, 1 );
 				ft_putstr_fd( "(stdin)= ", 1 );
+			}
 		}
 
 		cmd->hash.hash_func( ( const uint8_t * )ctx->input, ctx->len, hash );
