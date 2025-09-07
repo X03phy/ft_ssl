@@ -1,5 +1,14 @@
 #include "ft_ssl.h"
 
+/* For ft_memset() */
+#include "memory.h"
+
+/* For ft_putstr_fd() */
+#include "fd.h"
+
+/* For ft_strcmp() */
+#include "string.h"
+
 int main( int argc, char **argv )
 {
 	t_ssl_wfunc wfunc = NULL;
@@ -18,9 +27,13 @@ int main( int argc, char **argv )
 	}
 
 	cmd.name = argv[1];
-	wfunc = parse_cmd( &cmd );
+	wfunc = parse_cmd( &cmd, argv[1] );
 	if ( !wfunc )
+	{
+		print_invalid_command( argv[1] );
+		print_help();
 		return ( 1 );
+	}
 
 	return ( wfunc( argc, argv, &cmd ) );
 }
