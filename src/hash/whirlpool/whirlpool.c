@@ -1,5 +1,9 @@
 #include "whirlpool.h"
 
+/* For ft_memset() */
+#include "memory.h"
+
+/* Global variables */
 static const uint64_t C0[256] = {
 	0x18186018c07830d8, 0x23238c2305af4626, 0xc6c63fc67ef991b8, 0xe8e887e8136fcdfb,
 	0x878726874ca113cb, 0xb8b8dab8a9626d11, 0x0101040108050209, 0x4f4f214f426e9e0d,
@@ -536,6 +540,13 @@ static const uint64_t C7[256] = {
 	0x28a0285d88507528, 0x5c6d5cda31b8865c, 0xf8c7f8933fed6bf8, 0x86228644a411c286,
 };
 
+static const uint64_t RC[10] = {
+	0x1823c6e887b8014f, 0x36a6d2f5796f9152, 0x60bc9b8ea30c7b35, 0x1de0d7c22e4bfe57, 0x157737e59ff04ada,
+	0x58c9290ab1a06b85, 0xbd5d10f4cb3e0567, 0xe427418ba77d95d8, 0xfbee7c66dd17479e, 0xca2dbf07ad5a8333
+};
+
+
+/* Structures */
 typedef struct s_whirlpool_ctx
 {
 	uint64_t state[8];  // H0 to H7
@@ -544,6 +555,8 @@ typedef struct s_whirlpool_ctx
 	size_t buffer_len;  // Actual length of the buffer
 } t_whirlpool_ctx;
 
+
+/* Code */
 static void whirlpool_init( t_whirlpool_ctx *ctx )
 {
 	ft_memset( ctx->buffer, 0, sizeof( ctx->buffer ) );
@@ -555,11 +568,6 @@ static void whirlpool_init( t_whirlpool_ctx *ctx )
 
 static void whirlpool_transform( t_whirlpool_ctx *ctx )
 {
-	static const uint64_t RC[10] = {
-		0x1823c6e887b8014f, 0x36a6d2f5796f9152, 0x60bc9b8ea30c7b35, 0x1de0d7c22e4bfe57, 0x157737e59ff04ada,
-		0x58c9290ab1a06b85, 0xbd5d10f4cb3e0567, 0xe427418ba77d95d8, 0xfbee7c66dd17479e, 0xca2dbf07ad5a8333
-	};
-
 	uint64_t K[8], L[8], state[8], block[8];
 	uint8_t i, r;
 
