@@ -1,5 +1,7 @@
 #include "sha256.h"
 
+
+/* Macros */
 #define ROTR( x,n )   ( ( x >> n ) | ( x << ( 32 - n ) ) )
 #define SHR( x,n )    ( x >> n )
 #define CH( x,y,z )   ( ( x & y ) ^ ( ~x & z ) )
@@ -9,6 +11,8 @@
 #define SIG0( x )     ( ROTR( x,7 ) ^ ROTR( x,18 ) ^ SHR( x,3 ) )
 #define SIG1( x )     ( ROTR( x,17 ) ^ ROTR( x,19 ) ^ SHR( x,10 ) )
 
+
+/* Global variables */
 static const uint32_t K[64] = {
 	0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
 	0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
@@ -20,6 +24,8 @@ static const uint32_t K[64] = {
 	0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
 };
 
+
+/* Structures */
 typedef struct s_sha256_ctx
 {
 	uint32_t state[8];  // H0 to H7
@@ -28,6 +34,8 @@ typedef struct s_sha256_ctx
 	size_t buffer_len;  // Actual length of the buffer
 } t_sha256_ctx;
 
+
+/* Code */
 static void sha256_init( t_sha256_ctx *ctx )
 {
 	ctx->state[0] = 0x6a09e667;
