@@ -1,43 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_char_occurence.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/06 11:15:07 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/04/01 13:31:06 by ebonutto         ###   ########.fr       */
+/*   Created: 2025/02/14 15:52:30 by maecarva          #+#    #+#             */
+/*   Updated: 2025/04/01 13:29:42 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/fd.h"
+#include "../../include/char.h"
 
-/*
-Prototype
-	void ft_putstr_fd(char *s, int fd);
-
-Description
-	Outputs the string ’s’ to the given file
-	descriptor.
-
-Parameters
-	#1. The string to output.
-	#2. The file descriptor on which to write.
-
-Return value
-	None
-*/
-
-void	ft_putstr_fd(const char *s, int fd)
+int	ft_char_occurence(char *str, char c)
 {
-	size_t	count;
+	int	count;
 
-	if (!s)
-		return ;
 	count = 0;
-	while (s[count])
+	if (!str)
+		return (count);
+	while (*str)
 	{
-		ft_putchar_fd(s[count], fd);
-		count++;
+		if (*str == c)
+			count++;
+		str++;
 	}
+	return (count);
 }

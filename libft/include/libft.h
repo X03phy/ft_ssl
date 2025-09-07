@@ -16,7 +16,7 @@
 #include "memory.h"
 #include "string.h"
 #include "fd.h"
-#include "get_next_line.h"
 #include "linked_list.h"
+#include "char.h"
 
 #endif

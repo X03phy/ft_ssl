@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   char.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/18 08:56:23 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/09/01 14:12:47 by ebonutto         ###   ########.fr       */
+/*   Created: 2025/03/28 12:07:01 by ebonutto          #+#    #+#             */
+/*   Updated: 2025/03/28 16:13:51 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef CHAR_H
+# define CHAR_H
 
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
-# include "libft.h"
+# include <stdbool.h>
 
-ssize_t get_next_line( char **lineptr, int *n, int fd );
+bool	ft_char_charset(int c, char *charset);
+int		ft_char_occurence(char *str, char c);
+int		ft_isalnum(int c);
+int		ft_isalpha(int c);
+int		ft_isascii(int c);
+int		ft_isdigit(int c);
+int		ft_isprint(int c);
+int		ft_issign(int c);
+int		ft_isspace(int c);
+int		ft_tolower(int c);
+int		ft_toupper(int c);
 
 #endif
