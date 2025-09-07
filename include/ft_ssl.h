@@ -1,8 +1,11 @@
 #ifndef FT_SSL_H
 #define FT_SSL_H
 
-#include "color_code.h"
-#include "libft.h"
+/* For uintX_t */
+#include <stdint.h>
+
+/* For size_t */
+#include <stddef.h>
 
 
 /* Enums */
@@ -10,6 +13,7 @@ typedef enum e_cmd_type {
 	CMD_HASH,
 	CMD_CIPHER
 } t_cmd_type;
+
 
 /* Structures */
 /* Commands */
@@ -38,26 +42,25 @@ typedef int ( *t_ssl_wfunc )( int, char **, t_ssl_cmd * );
 extern t_ssl_cmd g_cmds[];
 
 
-int hash_wrapper( int argc, char **argv, t_ssl_cmd *cmd );
-
 /* Prototypes */
 /* Clear */
 
 /* Print */
 void print_help( void );
-void print_invalid_command( char *cmd );
-void print_invalid_flag( char *flag );
-void print_func_failed( char *func );
+void print_invalid_command( const char *cmd );
+void print_invalid_flag( const char *flag );
+void print_internal_error( const char *func );
 void print_hash( uint8_t *hash, int len );
-void print_algo_input( char *algo, const char *input );
+void print_hash_input( const char *input, const char *name, int beginning, int quotes );
+void print_invalid_file( const char *file );
 
 /* Utils */
-int get_input_fd( int fd, char **lineptr, size_t *n );
+int get_content_fd( int fd, char **lineptr, size_t *n );
 
 /* Parsing */
-t_ssl_wfunc parse_cmd( t_ssl_cmd *cmd );
+t_ssl_wfunc parse_cmd( t_ssl_cmd *cmd, char *arg );
 
 /* Wrapper */
-
+int hash_wrapper( int argc, char **argv, t_ssl_cmd *cmd );
 
 #endif
