@@ -164,8 +164,9 @@ static int hash_files( t_ssl_cmd *cmd, t_ssl_hash_ctx *ctx, uint8_t *hash )
 		}
 		if ( !get_content_fd( fd, &content, &len ) )
 		{
+			print_internal_error( "get_content_fd()" );
 			close( fd );
-			return ( 0 );
+			return ( 1 );
 		}
 		cmd->hash.hash_func( ( uint8_t * )content, len, hash );
 		close( fd );
@@ -183,7 +184,7 @@ static int hash_files( t_ssl_cmd *cmd, t_ssl_hash_ctx *ctx, uint8_t *hash )
 		tmp = tmp->next;
 	}
 
-	return ( 1 );
+	return ( 0 );
 }
 
 static void free_ssl_hash_ctx( t_ssl_hash_ctx *ctx )
