@@ -3,10 +3,9 @@
 #include "sha256.h"
 #include "whirlpool.h"
 
-
 t_ssl_cmd g_cmds[] = {
 	{ 
-		.name = "MD5", 
+		.name = "md5", 
 		.type = CMD_HASH, 
 		.hash = { 
 			.hash_size = 16, 
@@ -14,7 +13,7 @@ t_ssl_cmd g_cmds[] = {
 		} 
 	},
 	{ 
-		.name = "SHA256", 
+		.name = "sha256", 
 		.type = CMD_HASH, 
 		.hash = { 
 			.hash_size = 32, 
@@ -22,10 +21,10 @@ t_ssl_cmd g_cmds[] = {
 		} 
 	},
 	{ 
-		.name = "WHIRLPOOL", 
+		.name = "whirlpool", 
 		.type = CMD_HASH, 
 		.hash = { 
-			.hash_size = 32, 
+			.hash_size = 64, 
 			.hash_func = whirlpool 
 		} 
 	},
