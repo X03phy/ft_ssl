@@ -11,7 +11,8 @@
 /* Enums */
 typedef enum e_cmd_type {
 	CMD_HASH,
-	CMD_CIPHER
+	CMD_ENCODING,
+	CMD_ENCRYPTION,
 } t_cmd_type;
 
 
@@ -26,10 +27,10 @@ typedef struct s_ssl_cmd {
 			void ( *hash_func )( const uint8_t *, size_t, uint8_t * );
 		} hash;
 		struct {
-			int key_size;
-			void ( *encrypt_func )( const uint8_t *, size_t, const uint8_t *, uint8_t * );
-			void ( *decrypt_func )( const uint8_t *, size_t, const uint8_t *, uint8_t * );
-		} cipher;
+			void ( *encode_func )( const uint8_t *, size_t, uint8_t * );
+			int ( *decode_func )( const uint8_t *, size_t, uint8_t * );
+		} encoding;
+		
 	};
 } t_ssl_cmd;
 
