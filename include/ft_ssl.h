@@ -27,8 +27,8 @@ typedef struct s_ssl_cmd {
 		} hash;
 		struct {
 			int key_size;
-			void ( *encrypt )( const uint8_t *, size_t, const uint8_t *, uint8_t * );
-			void ( *decrypt )( const uint8_t *, size_t, const uint8_t *, uint8_t * );
+			void ( *encrypt_func )( const uint8_t *, size_t, const uint8_t *, uint8_t * );
+			void ( *decrypt_func )( const uint8_t *, size_t, const uint8_t *, uint8_t * );
 		} cipher;
 	};
 } t_ssl_cmd;
