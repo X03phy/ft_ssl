@@ -1,5 +1,8 @@
 #include "base64.h"
+#include "fd.h"
 
+
+/* Global variables */
 static const char BASE64[64] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 static const int UNBASE64[132] = {
@@ -16,6 +19,8 @@ static const int UNBASE64[132] = {
 	49, 50, 51, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 120-131
 };
 
+
+/* Code */
 void base64_encode( const uint8_t *data, size_t len, uint8_t *ciphertext )
 {
 	size_t data_index = 0;
@@ -61,7 +66,7 @@ int	base64_decode( const uint8_t *ciphertext, size_t len, uint8_t *plaintext )
 
 	if( ( len & 0x03 ) )
 	{
-		fprintf( stderr, "Invalid ciphertext length\n" );
+		ft_putstr_fd( "Invalid ciphertext length\n", 2 );
 		return ( 1 );
 	}
 
@@ -71,8 +76,10 @@ int	base64_decode( const uint8_t *ciphertext, size_t len, uint8_t *plaintext )
 		{
 			if ( ( ciphertext[ciphertext_index + i] > 131 ) || ( UNBASE64[ciphertext[ciphertext_index + i]] == -1 ) )
 			{
-				fprintf(stderr, "Invalid base64 char, cannot decode: %c\n", ciphertext[ciphertext_index + i] );
-				return ( 2 );
+				ft_putstr_fd( "Invalid base64 char, cannot decode: ", 2 );
+				// ft_putstr_fd( ( const unsigned char * )ciphertext[ciphertext_index + i], 2 );
+				ft_putchar_fd( '\n', 2 );
+				return ( 1 );
 			}
 		}
 
