@@ -11,13 +11,18 @@
 void print_help( void )
 {
 	ft_putchar_fd( '\n', 1 );
-	ft_putstr_fd( "Commands:\n", 1 );
+	ft_putstr_fd( "Standard commands:\n\n", 1 );
+	ft_putstr_fd( "Message Digest commands:\n", 1 );
 	ft_putstr_fd( "md5\n", 1 );
 	ft_putstr_fd( "sha256\n", 1 );
 	ft_putstr_fd( "whirlpool\n", 1 );
 	ft_putchar_fd( '\n', 1 );
 	ft_putstr_fd( "Flags:\n", 1 );
 	ft_putstr_fd( "-p -q -r -s\n", 1 );
+	ft_putchar_fd( '\n', 1 );
+	ft_putstr_fd( "Cipher commands:\n", 1 );
+	ft_putstr_fd( "base64\n", 1 );
+	ft_putchar_fd( '\n', 1 );
 }
 
 void print_invalid_command( const char *cmd )
