@@ -63,5 +63,6 @@ t_ssl_wfunc parse_cmd( t_ssl_cmd *cmd, char *arg );
 
 /* Wrapper */
 int hash_wrapper( int argc, char **argv, t_ssl_cmd *cmd );
+int encoding_wrapper( int argc, char **argv, t_ssl_cmd *cmd );
 
 #endif

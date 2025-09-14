@@ -20,10 +20,9 @@ t_ssl_wfunc parse_cmd( t_ssl_cmd *cmd, char *arg )
 			}
 			else
 			{
-				cmd->cipher.key_size =  g_cmds[i].cipher.key_size;
-				cmd->cipher.encrypt_func =  g_cmds[i].cipher.encrypt_func;
-				cmd->cipher.decrypt_func =  g_cmds[i].cipher.decrypt_func;
-				return ( hash_wrapper );
+				cmd->encoding.encode_func =  g_cmds[i].encoding.encode_func;
+				cmd->encoding.decode_func =  g_cmds[i].encoding.decode_func;
+				return ( encoding_wrapper );
 			}
 		}
 	}
