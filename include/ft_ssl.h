@@ -57,6 +57,7 @@ void print_invalid_file( const char *file );
 
 /* Utils */
 int get_content_fd( int fd, char **lineptr, size_t *n );
+static inline int flag_active( int n, int f );
 
 /* Parsing */
 t_ssl_wfunc parse_cmd( t_ssl_cmd *cmd, char *arg );
