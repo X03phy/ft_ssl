@@ -95,11 +95,6 @@ static int parse_input( int argc, char **argv, t_ssl_hash_ctx *ctx )
 	return ( 1 );
 }
 
-static inline int flag_active( int n, int f )
-{
-	return ( ( n >> f ) & 1 );
-}
-
 static void hash_input( t_ssl_cmd *cmd, t_ssl_hash_ctx *ctx, uint8_t *hash )
 {
 	if ( flag_active( ctx->flags, FLAG_P ) || ( !ctx->files && !ctx->strings ) )
