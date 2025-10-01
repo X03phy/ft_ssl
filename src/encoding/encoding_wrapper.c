@@ -27,7 +27,7 @@ typedef struct s_ssl_encoding_ctx {
 	char   *input;
 	size_t len;
 	t_list *inf;
-	t_list *out;
+	t_list *outf;
 } t_ssl_encoding_ctx;
 
 
@@ -36,16 +36,19 @@ static int parse_input( int argc, char **argv, t_ssl_encoding_ctx *ctx )
 {
 	int    i = 2; // argv[1] = command
 	t_list *tmp;
+	char *file;
+	int fd;
+	int exit_code;
 
 	while ( i < argc )
 	{
 		if ( argv[i][0] == '-' )
 		{
-			if ( ft_strcmp( argv[i], "-e" ) == 0 )
+			if ( ft_strcasecmp( argv[i], "-e" ) == 0 )
 				ctx->flags |= 1 << FLAG_E;
-			else if ( ft_strcmp( argv[i], "-d" ) == 0 )
+			else if ( ft_strcasecmp( argv[i], "-d" ) == 0 )
 				ctx->flags |= 1 << FLAG_D;
-			else if ( ft_strcmp( argv[i], "-i" ) == 0 )
+			else if ( ft_strcasecmp( argv[i], "-i" ) == 0 )
 			{
 				if ( i + 1 >= argc )
 				{
@@ -62,7 +65,7 @@ static int parse_input( int argc, char **argv, t_ssl_encoding_ctx *ctx )
 				}
 				ft_lstadd_back( &ctx->inf, tmp );	
 			}
-			else if ( ft_strcmp( argv[i], "-o" ) == 0 )
+			else if ( ft_strcasecmp( argv[i], "-o" ) == 0 )
 			{
 				if ( i + 1 >= argc )
 				{
@@ -77,7 +80,7 @@ static int parse_input( int argc, char **argv, t_ssl_encoding_ctx *ctx )
 					print_internal_error( "ft_lstnew()" );
 					return ( 0 );
 				}
-				ft_lstadd_back( &ctx->out, tmp );
+				ft_lstadd_back( &ctx->outf, tmp );
 			}
 			else
 			{
@@ -89,7 +92,22 @@ static int parse_input( int argc, char **argv, t_ssl_encoding_ctx *ctx )
 		++i;
 	}
 
-	if ( !ctx->inf )
+	if ( ctx->inf )
+	{
+		file = ( char * )ft_lstlast( ctx->inf )->content;
+		fd = open( file, O_RDONLY );
+		if ( fd == -1 )
+		{
+			ft_putstr_fd( file, 2 );
+			ft_putstr_fd( ": could not be opened", 2 );
+			return ( 0 );
+		}
+		exit_code = get_content_fd( fd, &(ctx->input), &(ctx->len) );
+		close( fd );
+		return ( exit_code );
+	}
+
+	else
 	{
 		if ( !get_content_fd( 0, &(ctx->input), &(ctx->len) ) )
 			return ( 0 );
@@ -98,26 +116,67 @@ static int parse_input( int argc, char **argv, t_ssl_encoding_ctx *ctx )
 	return ( 1 );
 }
 
-#include <stdio.h>
+static void free_ssl_encoding_ctx( t_ssl_encoding_ctx *ctx )
+{
+	ft_lstfree( &ctx->inf );
+	ft_lstfree( &ctx->outf );
+	if ( ctx->input )
+		free( ctx->input );
+}
+
 int encoding_wrapper( int argc, char **argv, t_ssl_cmd *cmd )
 {
-	// int exit_code;
+	int exit_code;
 	t_ssl_encoding_ctx ctx;
 	size_t len;
 	uint8_t *text;
+	int fd;
+	char *file;
 
 	ft_memset( &ctx, 0, sizeof(ctx) );
 
 	if ( !parse_input( argc, argv, &ctx ) )
+	{
+		free_ssl_encoding_ctx( &ctx );
 		return ( 1 );
+	}
 
+	if ( ctx.outf )
+	{
+		file = ( char * )ft_lstlast( ctx.outf )->content;
+		fd = open( file, O_WRONLY | O_TRUNC | O_CREAT, 0644 );
+		if ( fd == -1 )
+		{
+			ft_putstr_fd( file, 2 );
+			ft_putstr_fd( ": could not be opened", 2 );
+			free_ssl_encoding_ctx( &ctx );
+			return ( 1 );
+		}
+	}
+	else
+		fd = 1;
 
-	len = 4 * ((ctx.len + 2) / 3) + 1;
-	text = malloc(sizeof(char)* len);
+	if ( flag_active( ctx.flags, FLAG_D ) )
+	{
+		len = 4 * ((ctx.len + 2) / 3) + 1;
+		text = malloc( sizeof(char) * len );
+		exit_code = cmd->encoding.decode_func( ( const uint8_t *)ctx.input, ctx.len, text );
+		if ( exit_code )
+			return ( 1 );
+	}
+	else
+	{
+		len = 4 * ((ctx.len + 2) / 3) + 1;
+		text = malloc( sizeof(char) * len );
+		cmd->encoding.encode_func( ( const uint8_t *)ctx.input, ctx.len, text );
+	}
 
-	printf( "%ld\n", len );
-	cmd->encoding.encode_func( ( const uint8_t *)ctx.input, ctx.len, text );
+	ft_putendl_fd( ( char * )text, fd );
 
-	printf( "%s\n", text );
-	return ( 1 );
+	if ( ctx.outf )
+		close( fd );
+	free( text );
+	free_ssl_encoding_ctx( &ctx );
+
+	return ( 0 );
 }

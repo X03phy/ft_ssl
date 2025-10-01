@@ -55,8 +55,3 @@ int get_content_fd( int fd, char **lineptr, size_t *n )
 
 	return ( 1 );
 }
-
-static inline int flag_active( int n, int f )
-{
-	return ( ( n >> f ) & 1 );
-}
