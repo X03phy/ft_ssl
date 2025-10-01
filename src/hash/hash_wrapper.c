@@ -204,7 +204,10 @@ int hash_wrapper( int argc, char **argv, t_ssl_cmd *cmd )
 	ft_memset( &ctx, 0, sizeof(ctx) );
 
 	if ( !parse_input( argc, argv, &ctx ) )
+	{
+		free_ssl_hash_ctx( &ctx );
 		return ( 1 );
+	}
 
 	hash_input( cmd, &ctx, hash );
 	hash_strings( cmd, &ctx, hash );
