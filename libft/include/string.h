@@ -6,7 +6,7 @@
 /*   By: ebonutto <ebonutto@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 11:47:04 by ebonutto          #+#    #+#             */
-/*   Updated: 2025/09/05 18:26:00 by ebonutto         ###   ########.fr       */
+/*   Updated: 2025/10/02 11:29:46 by ebonutto         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,6 @@ char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 int ft_strcasecmp(const char *s1, const char *s2);
+char *ft_strremove( const char *str, const char c )
 
 #endif
