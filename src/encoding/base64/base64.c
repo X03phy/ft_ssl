@@ -114,9 +114,9 @@ int	base64_decode( const uint8_t *ciphertext, size_t len, uint8_t *plaintext )
 		{
 			if ( ( ciphertext[ciphertext_index + i] > 131 ) || ( UNBASE64[ciphertext[ciphertext_index + i]] == -1 ) )
 			{
-				ft_putstr_fd( "Invalid base64 char, cannot decode: ", 2 );
-				// ft_putstr_fd( ( const unsigned char * )ciphertext[ciphertext_index + i], 2 );
-				ft_putchar_fd( '\n', 2 );
+				ft_putstr_fd( "Invalid base64 char, cannot decode: '", 2 );
+				ft_putchar_fd( ( const char )( ciphertext[ciphertext_index + i] ), 2 );
+				ft_putstr_fd( "'\n", 2 );
 				return ( 1 );
 			}
 		}

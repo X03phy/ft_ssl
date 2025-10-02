@@ -12,7 +12,7 @@
 /* For ft_memset() */
 #include "memory.h"
 
-/* For ft_strcmp(), ft_strlen() */
+/* For ft_strcmp(), ft_strlen(), ft_strremove() */
 #include "string.h"
 
 
@@ -124,6 +124,7 @@ static void free_ssl_encoding_ctx( t_ssl_encoding_ctx *ctx )
 		free( ctx->input );
 }
 
+#include <stdio.h>
 int encoding_wrapper( int argc, char **argv, t_ssl_cmd *cmd )
 {
 	int exit_code;
@@ -132,6 +133,7 @@ int encoding_wrapper( int argc, char **argv, t_ssl_cmd *cmd )
 	uint8_t *text;
 	int fd;
 	char *file;
+	char *tmp;
 
 	ft_memset( &ctx, 0, sizeof(ctx) );
 
@@ -158,11 +160,28 @@ int encoding_wrapper( int argc, char **argv, t_ssl_cmd *cmd )
 
 	if ( flag_active( ctx.flags, FLAG_D ) )
 	{
-		len = 4 * ((ctx.len + 2) / 3) + 1;
-		text = malloc( sizeof(char) * len );
-		exit_code = cmd->encoding.decode_func( ( const uint8_t *)ctx.input, ctx.len, text );
-		if ( exit_code )
+		tmp = ft_strremove( ctx.input, '\n' );
+		if ( !tmp )
+		{
+			if ( ctx.outf )
+				close( fd );
+			free_ssl_encoding_ctx( &ctx );
 			return ( 1 );
+		}
+		free( ctx.input );
+		ctx.input = tmp;
+
+		len = 4 * ((ctx.len + 2) / 3) + 1;
+		ctx.len = ft_strlen(ctx.input);
+		text = malloc( sizeof(char) * len );
+		exit_code = cmd->encoding.decode_func( ( const uint8_t * )ctx.input, ctx.len, text );
+		if ( exit_code )
+		{
+			if ( ctx.outf )
+				close( fd );
+			free_ssl_encoding_ctx( &ctx );
+			return ( 1 );
+		}
 	}
 	else
 	{
