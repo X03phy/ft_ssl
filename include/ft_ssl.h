@@ -1,5 +1,4 @@
-#ifndef FT_SSL_H
-#define FT_SSL_H
+#pragma once
 
 
 /*
@@ -32,63 +31,67 @@
  * Enums
 */
 
-typedef enum e_cmd_type {
-	EVP_CMD_HASH,
-	EVP_CMD_ENCODING,
-	EVP_CMD_CIPHER
-} e_cmd_type;
-
+typedef enum e_func_type {
+	ft_none,
+	ft_general,
+	ft_md,
+	ft_cipher,
+	ft_pkey,
+	ft_md_alg,
+	ft_cipher_alg
+} e_func_type;
 
 /*
  * Structures
 */
 
-typedef struct s_evp_md {
-
-} t_evp_md;
-
-/* Commands */
-typedef struct s_evp_cmd {
+typedef struct s_options {
 	const char *name;
-	e_cmd_type type;
-	union {
-		struct {
-			size_t hash_size;
-			void   (*hash_func)(const uint8_t *, size_t, uint8_t *);
-		} hash;
-		struct {
-			void (*encode_func)(const uint8_t *, size_t, uint8_t *);
-			int  (*decode_func)(const uint8_t *, size_t, uint8_t *);
-		} encoding;
-	};
-} t_evp_cmd;
+	int        retval;
+	int        valtype;
+	const char *helpstr;
+} t_options;
+
+
+typedef struct s_function {
+	e_func_type     type;
+	const char      *name;
+	int             (*func)(int argc, char *argv[]);
+	const t_options *help;
+} t_function;
+
+
+// /* Commands */
+// typedef struct s_evp_cmd {
+// 	const char *name;
+// 	e_cmd_type type;
+// 	union {
+// 		struct {
+// 			size_t hash_size;
+// 			void   (*hash_func)(const uint8_t *, size_t, uint8_t *);
+// 		} hash;
+// 		struct {
+// 			void (*encode_func)(const uint8_t *, size_t, uint8_t *);
+// 			int  (*decode_func)(const uint8_t *, size_t, uint8_t *);
+// 		} encoding;
+// 	};
+// } t_evp_cmd;
 
 
 /* Function pointer type for commands */
-typedef int (*t_ssl_wfunc)(int, char **, t_ssl_cmd *);
+// typedef int (*t_ssl_wfunc)(int, char **, t_ssl_cmd *);
 
 
 /*
  * Global Variables
 */
 
-extern t_ssl_cmd g_cmds[];
+// extern t_ssl_cmd g_cmds[];
 
 
 /*
  * Prototypes
 */
-
-/* Clear */
-
-/* Print */
-void print_help( void );
-void print_invalid_command( const char *cmd );
-void print_invalid_flag( const char *flag );
-void print_internal_error( const char *func );
-void print_hash( uint8_t *hash, int len );
-void print_hash_input( const char *input, const char *name, int beginning, int quotes );
-void print_invalid_file( const char *file );
 
 /* Utils */
 int get_content_fd( int fd, char **lineptr, size_t *n );

@@ -7,3 +7,6 @@ YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYQo=
 gerer ce truc la
 
 https://github.com/openssl/openssl/blob/3f450936a13e67b9011c47fa5e5d0fe01ea152b4/include/crypto/evp.h#L189
+
+https://github.com/openssl/openssl/blob/3f450936a13e67b9011c47fa5e5d0fe01ea152b4/apps/openssl.c#L500
+
