@@ -8,6 +8,17 @@
 #define INVALID_COMMAND_FORMAT RED "%s: Error: '%s' is an invalid command\n" RST
 
 
+
+
+
+
+#define LHASH_OF(type) struct lhash_st_##type
+static int do_cmd()
+{
+	
+}
+
+
 int main(int argc, char **argv)
 {
 	t_function f, *fp;
