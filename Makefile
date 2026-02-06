@@ -1,48 +1,35 @@
-NAME=ft_ssl
+NAME := ft_ssl
 
-CC=gcc
-CFLAGS=-Wall -Werror -Wextra -g -MMD
+CC := gcc
+CFLAGS := -Wall -Wextra -Werror
 
-SRC_DIR=src
-BUILD=.build
-INCLUDE=-Iinclude -I$(LIBFT_DIR)/include
+SRC_DIR := src
+INC_DIR := include
+BUILD_DIR := .build
 
-SRC=$(shell find $(SRC_DIR) -name '*.c')
-OBJ=$(patsubst $(SRC_DIR)/%.c, $(BUILD)/%.o, $(SRC))
-DEP=$(OBJ:%.o=%.d)
+CPPFLAGS := -I$(INC_DIR) -MMD -MP
 
-LIBFT_DIR=libft
-LIBFT=$(LIBFT_DIR)/libft.a
+SRCS := $(shell find $(SRC_DIR) -type f -name "*.c")
+OBJS := $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
+DEPS := $(OBJS:.o=.d)
 
-LIBS=-L$(LIBFT_DIR) -lft
+.PHONY: all clean fclean re
 
-all: create_dir $(NAME)
+all: $(NAME)
 
-create_dir: | $(BUILD)
+$(NAME): $(OBJS)
+	$(CC) $^ -o $@
 
-$(BUILD):
-	@mkdir -p $(BUILD)
-
-$(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ) -o $@ $(LIBS)
-
-$(LIBFT):
-	@make --no-print-directory -C $(LIBFT_DIR)
-
-$(BUILD)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
 clean:
-	@if [ -d $(BUILD) ]; then rm -rf $(BUILD) && printf "\033[1;31m\tDeleted: $(NAME) $(BUILD)\033[0m\n"; fi
-	@make --no-print-directory -C $(LIBFT_DIR) clean
+	rm -rf $(BUILD_DIR)
 
 fclean: clean
-	@if [ -f $(NAME) ]; then rm -rf $(NAME) && printf "\033[1;31m\tDeleted: $(NAME)\033[0m\n"; fi
-	@make --no-print-directory -C $(LIBFT_DIR) fclean
+	rm -f $(NAME)
 
 re: fclean all
 
--include $(DEP)
-
-.PHONY=all clean fclean re create_dir
+-include $(DEPS)

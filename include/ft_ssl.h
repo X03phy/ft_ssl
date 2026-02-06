@@ -1,49 +1,84 @@
 #ifndef FT_SSL_H
 #define FT_SSL_H
 
-/* For uintX_t */
-#include <stdint.h>
 
-/* For size_t */
-#include <stddef.h>
+/*
+ * Includes
+*/
+
+#include <stdint.h> // uintX_t
+#include <stddef.h> // size_t
 
 
-/* Enums */
+/*
+ * Macros
+*/
+
+#define HELP_FORMAT "\n" \
+                    "Message Digest commands:\n" \
+                    "md5\n" \
+                    "sha256\n" \
+                    "whirlpool\n" \
+                    "\n" \
+                    "Flags:\n" \
+                    "-p -q -r -s\n" \
+                    "\n" \
+                    "Cipher commands:\n" \
+                    "base64\n" \
+                    "\n"
+
+
+/*
+ * Enums
+*/
+
 typedef enum e_cmd_type {
-	CMD_HASH,
-	CMD_ENCODING,
-	CMD_ENCRYPTION,
-} t_cmd_type;
+	EVP_CMD_HASH,
+	EVP_CMD_ENCODING,
+	EVP_CMD_CIPHER
+} e_cmd_type;
 
 
-/* Structures */
+/*
+ * Structures
+*/
+
+typedef struct s_evp_md {
+
+} t_evp_md;
+
 /* Commands */
-typedef struct s_ssl_cmd {
+typedef struct s_evp_cmd {
 	const char *name;
-	t_cmd_type type;
+	e_cmd_type type;
 	union {
 		struct {
 			size_t hash_size;
-			void ( *hash_func )( const uint8_t *, size_t, uint8_t * );
+			void   (*hash_func)(const uint8_t *, size_t, uint8_t *);
 		} hash;
 		struct {
-			void ( *encode_func )( const uint8_t *, size_t, uint8_t * );
-			int ( *decode_func )( const uint8_t *, size_t, uint8_t * );
+			void (*encode_func)(const uint8_t *, size_t, uint8_t *);
+			int  (*decode_func)(const uint8_t *, size_t, uint8_t *);
 		} encoding;
-		
 	};
-} t_ssl_cmd;
+} t_evp_cmd;
 
 
 /* Function pointer type for commands */
-typedef int ( *t_ssl_wfunc )( int, char **, t_ssl_cmd * );
+typedef int (*t_ssl_wfunc)(int, char **, t_ssl_cmd *);
 
 
-/* Global Variables */
+/*
+ * Global Variables
+*/
+
 extern t_ssl_cmd g_cmds[];
 
 
-/* Prototypes */
+/*
+ * Prototypes
+*/
+
 /* Clear */
 
 /* Print */

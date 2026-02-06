@@ -1,5 +1,4 @@
-#ifndef COLOR_CODE_H
-# define COLOR_CODE_H
+#pragma once
 
 //Regular text
 # define BLK "\e[0;30m"
@@ -73,5 +72,3 @@
 
 //Reset
 # define RST "\e[0m"
-
-#endif

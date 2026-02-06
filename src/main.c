@@ -1,39 +1,35 @@
 #include "ft_ssl.h"
+#include "colors.h" // COLORS
+#include <string.h> // memset(), strcmp()
+#include <stdio.h> // fprintf(), stderr
 
-/* For ft_memset() */
-#include "memory.h"
 
-/* For ft_putstr_fd() */
-#include "fd.h"
+#define USAGE_FORMAT "usage: %s command [flags] [file/string]\n"
+#define INVALID_COMMAND_FORMAT RED "%s: Error: '%s' is an invalid command\n" RST
 
-/* For ft_strcmp() */
-#include "string.h"
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
 	t_ssl_wfunc wfunc = NULL;
-	t_ssl_cmd   cmd;
-	
-	ft_memset( &cmd, 0, sizeof(t_ssl_cmd) );
 
-	if ( argc < 2 ) {
-		ft_putstr_fd( "usage: ft_ssl command [flags] [file/string]\n", 2 );
-		return ( 1 );
+	memset(&cmd, 0, sizeof(t_ssl_cmd));
+
+	if (argc < 2) {
+		fprintf(stderr, USAGE_FORMAT HELP_FORMAT, argv[0]);
+		return (1);
 	}
 
-	if ( argc == 2 && ft_strcmp( "help", argv[1] ) == 0 ) {
-		print_help();
-		return ( 0 );
+	if (argc == 2 && strcmp("help", argv[1]) == 0) {
+		fprintf(stderr, HELP_FORMAT);
+		return (0);
 	}
 
 	cmd.name = argv[1];
-	wfunc = parse_cmd( &cmd, argv[1] );
-	if ( !wfunc )
-	{
-		print_invalid_command( argv[1] );
-		print_help();
-		return ( 1 );
+	wfunc = parse_cmd(&cmd, argv[1]);
+	if (!wfunc) {
+		fprintf(stderr, INVALID_COMMAND_FORMAT HELP_FORMAT, argv[0], argv[1]);
+		return (1);
 	}
 
-	return ( wfunc( argc, argv, &cmd ) );
+	return (wfunc(argc, argv, &cmd));
 }
