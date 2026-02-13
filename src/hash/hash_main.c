@@ -6,11 +6,12 @@
 #include <stdlib.h> // malloc(), free()
 #include <fcntl.h> // open()
 
+
 /*
  * Macros
 */
 
-#define UNRECOGNIZED_OPTION_FORMAT RED "%s: unrecognized option '%s'\n" RST
+#define UNRECOGNIZED_OPTION_FORMAT RED "%s: unrecognized option '%s'\n" RST // -> probablement a mettre dans le .h global (ft_ssl.h)
 #define HASH_USAGE_FORMAT GRN "\nUsage: %s %s [flags] [file/string]\n" RST
 
 
@@ -84,7 +85,7 @@ static int parse_inputs(t_hash_ctx *hctx, int argc, char **argv) // checker comm
 				if (!ret)
 					return (0);
 			} else {
-				fprintf(stderr, UNRECOGNIZED_OPTION_FORMAT, argv[0], argv[i]);
+				fprintf(stderr, UNRECOGNIZED_OPTION_FORMAT, argv[0], argv[i]);  //! Ameliorer les messages
 				fprintf(stderr, HASH_USAGE_FORMAT, argv[0], argv[1]);
 				return (0);
 			}
@@ -96,6 +97,14 @@ static int parse_inputs(t_hash_ctx *hctx, int argc, char **argv) // checker comm
 		i += 1;
 	}
 
+	return (1);
+}
+
+
+
+static int process_stdin(t_hash_ctx *hctx)
+{
+	(void)hctx;
 	return (1);
 }
 
@@ -118,8 +127,11 @@ static int process_file(t_hash_ctx *hctx, const char *str)
 
 	fd = open(str, O_RDONLY);
 	if (fd < 0) {
-
+		perror(hctx->algo->name);
+		return (0);
 	}
+
+
 	(void)hctx;
 	return (1);
 }
@@ -143,16 +155,14 @@ void print_hash(t_hash_ctx *ctx, t_hash_input *input, uint8_t *digest)
 	int is_reverse = ctx->flags & (1 << FLAG_R);
 
 	/* QUIET MODE */
-	if (is_quiet)
-	{
+	if (is_quiet) {
 		print_hex(digest, ctx->algo->digest_size);
 		printf("\n");
-		return;
+		return ;
 	}
 
 	/* REVERSE MODE */
-	if (is_reverse)
-	{
+	if (is_reverse) {
 		print_hex(digest, ctx->algo->digest_size);
 
 		if (input->type == HASH_INPUT_STRING)
@@ -161,7 +171,7 @@ void print_hash(t_hash_ctx *ctx, t_hash_input *input, uint8_t *digest)
 			printf(" %s", input->data);
 
 		printf("\n");
-		return;
+		return ;
 	}
 
 	/* NORMAL MODE */
@@ -183,6 +193,7 @@ int process_inputs(t_hash_ctx *hctx)
 	t_list       *node;
 	t_hash_input *input;
 	uint8_t      digest[hctx->algo->digest_size];
+	int          ret;
 
 	node = hctx->inputs; // handle if no inputs
 	while (node) {
@@ -190,17 +201,20 @@ int process_inputs(t_hash_ctx *hctx)
 
 		hctx->algo->init(hctx->algo_ctx);
 
-		if (input->type == HASH_INPUT_FILE) {
-			printf("je suis dans file\n");
-			process_file(hctx, input->data);
+		switch (input->type) {
+			case HASH_INPUT_FILE:
+				ret = process_file(hctx, input->data);
+				break;
+			case HASH_INPUT_STDIN:
+				ret = process_stdin(hctx);
+				break;
+			case HASH_INPUT_STRING:
+				ret = process_string(hctx, input->data);
+				break;
 		}
-		// else if (input->type == HASH_INPUT_STDIN);
-		else if (input->type == HASH_INPUT_STRING) {
-			printf("je suis dans string\n");
-			process_string(hctx, input->data);
-		}
-		else
-			printf("ca ne marche pas et c'est normal\n");
+
+		if (!ret)
+			return (0);
 
 		hctx->algo->final(digest, hctx->algo_ctx);
 
