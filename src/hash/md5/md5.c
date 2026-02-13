@@ -38,17 +38,10 @@ static const uint32_t K[64] = {
 
 
 /* Structures */
-typedef struct s_md5_ctx
-{
-	uint32_t state[4];
-	uint64_t bitlen;
-	uint8_t buffer[64];
-	size_t buffer_len;
-} t_md5_ctx;
 
 
 /* Code */
-static void md5_init( t_md5_ctx *ctx )
+int md5_init( t_md5_ctx *ctx )
 {
 	ctx->state[0] = 0x67452301;
 	ctx->state[1] = 0xefcdab89;
@@ -57,6 +50,8 @@ static void md5_init( t_md5_ctx *ctx )
 
 	ctx->bitlen = 0;
 	ctx->buffer_len = 0;
+
+	return (0);
 }
 
 static void md5_transform( t_md5_ctx *ctx )
@@ -110,7 +105,7 @@ static void md5_transform( t_md5_ctx *ctx )
 	ctx->state[3] += d;
 }
 
-static void md5_update( t_md5_ctx *ctx, const uint8_t *data, const size_t len )
+int md5_update( t_md5_ctx *ctx, const uint8_t *data, const size_t len )
 {
 	for ( size_t i = 0; i < len; ++i )
 	{
@@ -123,9 +118,11 @@ static void md5_update( t_md5_ctx *ctx, const uint8_t *data, const size_t len )
 			ctx->buffer_len = 0;
 		}
 	}
+
+	return (1);
 }
 
-static void md5_final( uint8_t hash[16], t_md5_ctx *ctx )
+int md5_final( uint8_t hash[16], t_md5_ctx *ctx )
 {
 	ctx->buffer[ctx->buffer_len++] = 0x80;
 
@@ -158,6 +155,8 @@ static void md5_final( uint8_t hash[16], t_md5_ctx *ctx )
 		hash[i * 4 + 2] = ( ctx->state[i] >> 16 ) & 0xff;
 		hash[i * 4 + 3] = ( ctx->state[i] >> 24 ) & 0xff;
 	}
+
+	return (1);
 }
 
 void md5( const uint8_t *data, size_t len, uint8_t hash[16] )
@@ -167,4 +166,19 @@ void md5( const uint8_t *data, size_t len, uint8_t hash[16] )
 	md5_init( &ctx );
 	md5_update( &ctx, data, len );
 	md5_final( hash, &ctx );
+}
+
+int md5_init_wrap(void *ctx)
+{
+	return md5_init((t_md5_ctx *)ctx);
+}
+
+int md5_update_wrap(void *ctx, const uint8_t *data, size_t len)
+{
+	return md5_update((t_md5_ctx *)ctx, data, len);
+}
+
+int md5_final_wrap(uint8_t *out, void *ctx)
+{
+	return md5_final(out, (t_md5_ctx *)ctx);
 }

@@ -9,7 +9,8 @@ BUILD_DIR := .build
 
 CPPFLAGS := -I$(INC_DIR) -MMD -MP
 
-SRCS := $(shell find $(SRC_DIR) -type f -name "*.c")
+# SRCS := $(shell find $(SRC_DIR) -type f -name "*.c")
+SRCS := src/main.c src/hash/hash_main.c src/hash/md5/md5.c src/tools/list/list.c
 OBJS := $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
