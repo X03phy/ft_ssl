@@ -3,7 +3,7 @@
 
 /*
  * Includes
-*/
+ */
 
 #include <stdint.h> // uintX_t
 #include <stddef.h> // size_t
@@ -13,7 +13,7 @@
 
 /*
  * Macros
-*/
+ */
 
 #define FLAG_P 0 // a enlever
 #define FLAG_Q 1
@@ -22,7 +22,7 @@
 
 /*
  * Enums
-*/
+ */
 
 typedef enum e_hash_input_type {
 	HASH_INPUT_STDIN,
@@ -33,7 +33,7 @@ typedef enum e_hash_input_type {
 
 /*
  * Structures
-*/
+ */
 
 typedef struct s_hash_algo {
 	const char *name;
@@ -61,6 +61,10 @@ typedef struct s_hash_ctx
 } t_hash_ctx;
 
 
+/*
+ * Global variables
+ */
+
 static const t_hash_algo g_hash_algos[] = {
 	{
 		"md5",
@@ -75,6 +79,12 @@ static const t_hash_algo g_hash_algos[] = {
 
 /*
  * Prototypes
-*/
+ */
 
+/* hash_main.c */
 int hash_main(int argc, char **argv);
+
+/* parse_input */
+void print_hash(t_hash_ctx *ctx, t_hash_input *input, uint8_t *digest);
+int process_inputs(t_hash_ctx *hctx);
+int parse_inputs(t_hash_ctx *hctx, int argc, char **argv);
