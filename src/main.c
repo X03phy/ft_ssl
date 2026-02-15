@@ -56,5 +56,5 @@ int main(int argc, char **argv)
 
 	ret = do_cmd(argc, argv);
 
-	return (ret);
+	return (!ret);
 }
