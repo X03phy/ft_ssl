@@ -1,6 +1,6 @@
 NAME := ft_ssl
 
-CC := gcc
+CC := cc
 CFLAGS := -Wall -Wextra -Werror
 
 SRC_DIR := src
