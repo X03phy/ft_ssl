@@ -1,11 +1,7 @@
 #include "hash.h"
-#include "colors.h"
-#include "list.h"
-#include <string.h> // strcmp()
-#include <stdio.h> // NULL, fprintf(), printf()
+#include <string.h> // strcmp(), memset()
+#include <stdio.h>  // NULL, fprintf(), perror()
 #include <stdlib.h> // malloc(), free()
-#include <fcntl.h> // open()
-#include <unistd.h> // read()
 
 
 /*
@@ -22,7 +18,7 @@ static const t_hash_algo *get_hash_algo(const char *name)
 		i += 1;
 	}
 
-	return (NULL); // -> N'arrivera jamais
+	return (NULL);
 }
 
 
@@ -33,11 +29,17 @@ int hash_main(int argc, char **argv)
 
 	memset(&hctx, 0, sizeof(hctx));
 
-	hctx.algo = get_hash_algo(argv[1]); // Pourra etre fourni en argument de cette fct -> opti
+	hctx.algo = get_hash_algo(argv[1]);
+	if (hctx.algo == NULL) {
+		fprintf(stderr, "%s: Error: '%s' is an unknown hash algorithm", argv[0], argv[1]);
+		return (0);
+	}
 
 	ret = parse_inputs(&hctx, argc, argv);
-	if (!ret)
+	if (!ret) {
+		// free_hash_ctx(hctx);
 		return (0);
+	}
 
 	hctx.algo_ctx = malloc(hctx.algo->ctx_size);
 	if (!hctx.algo_ctx) {
@@ -45,8 +47,8 @@ int hash_main(int argc, char **argv)
 		return (0);
 	}
 
-	process_inputs(&hctx);
+	ret = process_inputs(&hctx);
 
-	ret = 0;
-	return (ret);
+	free(hctx.algo_ctx);
+	return (!ret);
 }

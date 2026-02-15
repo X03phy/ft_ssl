@@ -1,25 +1,26 @@
 #include "hash.h"
 #include <unistd.h> // ssize_t, read(), close()
-#include <fcntl.h> // open()
+#include <fcntl.h>  // open(), O_RDONLY
+#include <stdio.h>  // perror()
+#include <stddef.h> // size_t
 #include <string.h> // strlen()
 #include <stdlib.h> // malloc(), free()
-#include <stdio.h>
 
 
 /*
  * Macros
-*/
+ */
 
 #define BUFFER_SIZE 1024
 
 
 /*
  * Functions
-*/
+ */
 
 static int process_file(t_hash_ctx *hctx, const char *filename)
 {
-	int     fd;
+	int     fd, ret;
 	ssize_t bytes_read;
 	uint8_t buffer[BUFFER_SIZE];
 
@@ -29,10 +30,11 @@ static int process_file(t_hash_ctx *hctx, const char *filename)
 		return (0);
 	}
 
-	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
-		hctx->algo->update(hctx->algo_ctx, buffer, bytes_read);
-	
-	if (bytes_read < 0) {
+	ret = 1;
+	while (ret && (bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
+		ret = hctx->algo->update(hctx->algo_ctx, buffer, bytes_read);
+
+	if (!ret || bytes_read < 0) {
 		perror(filename);
 		close(fd);
 		return (0);
@@ -43,12 +45,11 @@ static int process_file(t_hash_ctx *hctx, const char *filename)
 }
 
 
-static int process_string(t_hash_ctx *hctx, const char *str)
+static int process_string(t_hash_ctx *hctx, const char *str) // check update
 {
 	size_t len;
 
 	len = strlen(str);
-
 	hctx->algo->update(hctx->algo_ctx, (const uint8_t *)str, len);
 
 	return (1);
@@ -94,7 +95,7 @@ int process_inputs(t_hash_ctx *hctx)
 		return (0);
 	}
 
-	node = hctx->inputs; // handle if no inputs
+	node = hctx->inputs;
 	while (node) {
 		input = (t_hash_input *)node->data;
 

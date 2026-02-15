@@ -1,30 +1,39 @@
 #include "hash.h"
 #include "colors.h"
 #include "list.h"
-#include <stdlib.h> // malloc(), free()
-#include <stdio.h> // perror(), fprintf()
+#include <stdlib.h> // malloc(), free(), NULL
+#include <stdio.h>  // perror(), fprintf()
 
 
 /*
  * Macros
  */
 
-#define UNRECOGNIZED_OPTION_FORMAT RED "%s: unrecognized option '%s'\n" RST // -> probablement a mettre dans le .h global (ft_ssl.h)
-#define HASH_USAGE_FORMAT GRN "\nUsage: %s %s [flags] [file/string]\n" RST
+#define HASH_INVALID_OPTION_FORMAT RED "%s %s: Error: invalid option '%s'\n" RST
+#define HASH_USAGE_FORMAT GRN "\nUsage: %s %s [flags] [file/string]\n"
+#define HASH_HELP_FLAGS_STRING \
+YEL "Flags:\n" \
+"  -p        echo STDIN to STDOUT and append checksum\n" \
+"  -q        quiet mode\n" \
+"  -r        reverse output format\n" \
+"  -s <str>  print sum of given string\n" \
+RST
 
 
 /*
  * Functions
  */
 
-static int add_input(t_hash_ctx *hctx, e_hash_input_type type, char *data)
+static int add_input(t_hash_ctx *hctx, const e_hash_input_type type, char *data)
 {
 	t_hash_input *hinput;
 	t_list       *new;
 
 	hinput = malloc(sizeof(t_hash_input));
-	if (!hinput)
+	if (!hinput) {
+		perror("malloc failed");
 		return (0);
+	}
 
 	hinput->type = type;
 	hinput->data = data;
@@ -42,12 +51,10 @@ static int add_input(t_hash_ctx *hctx, e_hash_input_type type, char *data)
 }
 
 
-// ajouter des --help, -h, ...
-int parse_inputs(t_hash_ctx *hctx, int argc, char **argv) // checker comment free !!??
+int parse_inputs(t_hash_ctx *hctx, int argc, char **argv)
 {
-	int ret, i;
+	int i = 2;
 
-	i = 2;
 	while (i < argc) {
 		if (argv[i][0] == '-') {
 			if (argv[i][1] == 'q' && argv[i][2] == '\0') {
@@ -55,27 +62,26 @@ int parse_inputs(t_hash_ctx *hctx, int argc, char **argv) // checker comment fre
 			} else if (argv[i][1] == 'r' && argv[i][2] == '\0') {
 				hctx->flags |= 1 << FLAG_R;
 			} else if (argv[i][1] == 'p' && argv[i][2] == '\0') {
-				ret = add_input(hctx, HASH_INPUT_STDIN, NULL);
-				if (!ret)
+				if (!add_input(hctx, HASH_INPUT_STDIN, NULL))
 					return (0);
 			} else if (argv[i][1] == 's' && argv[i][2] == '\0') {
-				i += 1;
-				if (i >= argc) {
-					/* crustom error messages */
-					fprintf(stderr, "invalid argument after...");
+				if (i + 1 >= argc) {
+					fprintf(stderr, RED "%s %s: Error: expecting argument after '%s'\n" RST, argv[0], argv[1], argv[i]);
+					fprintf(stderr, HASH_USAGE_FORMAT, argv[0], argv[1]);
+					fprintf(stderr, HASH_HELP_FLAGS_STRING);
 					return (0);
 				}
-				ret = add_input(hctx, HASH_INPUT_STRING, argv[i]);
-				if (!ret)
+				i += 1;
+				if (!add_input(hctx, HASH_INPUT_STRING, argv[i]))
 					return (0);
 			} else {
-				fprintf(stderr, UNRECOGNIZED_OPTION_FORMAT, argv[0], argv[i]);  //! Ameliorer les messages
+				fprintf(stderr, HASH_INVALID_OPTION_FORMAT, argv[0], argv[1], argv[i]);
 				fprintf(stderr, HASH_USAGE_FORMAT, argv[0], argv[1]);
+				fprintf(stderr, HASH_HELP_FLAGS_STRING);
 				return (0);
 			}
 		} else {
-			ret = add_input(hctx, HASH_INPUT_FILE, argv[i]);
-			if (!ret)
+			if (!add_input(hctx, HASH_INPUT_FILE, argv[i]))
 				return (0);
 		}
 		i += 1;

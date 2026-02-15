@@ -1,5 +1,6 @@
 #include "hash.h"
-#include <stdio.h> // printf()
+#include <stddef.h> // size_t
+#include <stdio.h>  // printf()
 
 
 /*
@@ -10,8 +11,7 @@ static void print_hex(uint8_t *digest, size_t size)
 {
 	size_t i = 0;
 
-	while (i < size)
-	{
+	while (i < size) {
 		printf("%02x", digest[i]);
 		i += 1;
 	}
