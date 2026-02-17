@@ -3,21 +3,13 @@
 #include "list.h"
 #include <stdlib.h> // malloc(), free(), NULL
 #include <stdio.h>  // perror(), fprintf()
-
+#include <string.h> // strcmp()
 
 /*
  * Macros
  */
 
 #define HASH_INVALID_OPTION_FORMAT RED "%s %s: Error: invalid option '%s'\n" RST
-#define HASH_USAGE_FORMAT GRN "\nUsage: %s %s [flags] [file/string]\n"
-#define HASH_HELP_FLAGS_STRING \
-YEL "Flags:\n" \
-"  -p        echo STDIN to STDOUT and append checksum\n" \
-"  -q        quiet mode\n" \
-"  -r        reverse output format\n" \
-"  -s <str>  print sum of given string\n" \
-RST
 
 
 /*
@@ -57,7 +49,9 @@ int parse_inputs(t_hash_ctx *hctx, int argc, char **argv)
 
 	while (i < argc) {
 		if (argv[i][0] == '-') {
-			if (argv[i][1] == 'q' && argv[i][2] == '\0') {
+			if ((argv[i][1] == 'h' && argv[i][2] == '\0') || strcmp("--help", argv[i]) == 0)
+				hctx->flags |= 1 << FLAG_H;
+			else if (argv[i][1] == 'q' && argv[i][2] == '\0') {
 				hctx->flags |= 1 << FLAG_Q;
 			} else if (argv[i][1] == 'r' && argv[i][2] == '\0') {
 				hctx->flags |= 1 << FLAG_R;
