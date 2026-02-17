@@ -1,7 +1,7 @@
 #include "hash.h"
 #include <string.h> // strcmp(), memset()
-#include <stdio.h>  // NULL, fprintf(), perror()
-#include <stdlib.h> // malloc(), free()
+#include <stdio.h>  // NULL, printf()
+#include <stdlib.h> // malloc()
 
 
 /*
@@ -22,7 +22,7 @@ static const t_hash_algo *get_hash_algo(const char *name)
 }
 
 
-void	free_hash_ctx(t_hash_ctx *hctx)
+void free_hash_ctx(t_hash_ctx *hctx)
 {
 	t_list *node, *next;
 
@@ -54,6 +54,11 @@ int hash_main(int argc, char **argv)
 	if (!ret) {
 		free_hash_ctx(&hctx);
 		return (0);
+	}
+
+	if (hctx.flags & (1 << FLAG_H)) {
+		printf(HASH_USAGE_FORMAT, argv[0], argv[1]);
+		printf(HASH_HELP_FLAGS_STRING);
 	}
 
 	hctx.algo_ctx = malloc(hctx.algo->ctx_size);
