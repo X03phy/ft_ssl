@@ -5,11 +5,11 @@
  * Includes
  */
 
-#include "colors.h"
+#include "utils/colors.h"
 #include <stdint.h> // uintX_t
 #include <stddef.h> // size_t
-#include "list.h"
-#include "md5.h"
+#include "utils/list.h"
+#include "hash/md5.h"
 
 
 /*
@@ -24,12 +24,12 @@
 #define HASH_HELP_FORMAT \
 BOLD CYN "Usage:\n" RST \
 "  %s %s [flags] [files]\n" \
-BOLD CYN "Flags:\n" RST \
-"  -p                Read from STDIN, echo to STDOUT and append digest\n" \
-"  -q, --quiet       Suppress all normal output\n" \
-"  -r, --reverse     Reverse the output format\n" \
-"  -s, --string STR  Compute digest of the given string\n" \
-"  -h, --help        Display this help message and exit\n"
+BOLD CYN "\nFlags:\n" RST \
+"  -h, --help          Display this help message and exit\n" \
+"  -p, --append        Read from STDIN, echo to STDOUT and append digest\n" \
+"  -q, --quiet         Suppress all normal output\n" \
+"  -r, --reverse       Reverse the output format\n" \
+"  -s, --string [str]  Compute digest of the given string\n"
 
 
 /*
@@ -37,7 +37,6 @@ BOLD CYN "Flags:\n" RST \
  */
 
 typedef enum e_hash_input_type {
-	HASH_INPUT_STDIN,
 	HASH_INPUT_STRING,
 	HASH_INPUT_FILE
 } e_hash_input_type;

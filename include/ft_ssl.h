@@ -5,7 +5,7 @@
  * Includes
 */
 
-#include "hash.h"
+#include "hash/hash.h"
 
 
 /*
