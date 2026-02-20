@@ -1,4 +1,4 @@
-#include "md5.h"
+#include "hash/md5.h"
 
 
 /* Macros */

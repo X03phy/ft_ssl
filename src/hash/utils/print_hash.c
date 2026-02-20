@@ -1,4 +1,4 @@
-#include "hash.h"
+#include "hash/hash.h"
 #include <stddef.h> // size_t
 #include <stdio.h>  // printf()
 
@@ -40,9 +40,9 @@ void print_hash(t_hash_ctx *ctx, t_hash_input *input, uint8_t *digest)
 
 	if (input->type == HASH_INPUT_FILE)
 		printf("%s(%s) = ", ctx->algo->name, input->data);
-	else if (input->type == HASH_INPUT_STRING)
+	if (input->type == HASH_INPUT_STRING)
 		printf("%s(\"%s\") = ", ctx->algo->name, input->data);
-	else if (input->type == HASH_INPUT_STDIN)
+	else
 		printf("(stdin) = ");
 
 	print_hex(digest, ctx->algo->digest_size);

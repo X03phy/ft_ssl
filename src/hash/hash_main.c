@@ -1,4 +1,4 @@
-#include "hash.h"
+#include "hash/hash.h"
 #include <string.h> // strcmp(), memset()
 #include <stdio.h>  // NULL, printf()
 #include <stdlib.h> // malloc()

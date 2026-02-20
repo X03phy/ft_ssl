@@ -1,6 +1,6 @@
-#include "hash.h"
-#include "colors.h"
-#include "list.h"
+#include "hash/hash.h"
+#include "utils/colors.h"
+#include "utils/list.h"
 #include <stdlib.h> // malloc(), free(), NULL
 #include <stdio.h>  // perror(), fprintf()
 #include <string.h> // strcmp()
