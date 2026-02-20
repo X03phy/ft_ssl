@@ -1,7 +1,12 @@
 #include "hash/md5.h"
+#include <stdint.h> // uintX_t
+#include <stddef.h> // size_t
 
 
-/* Macros */
+/*
+ * Macros
+ */
+
 #define F(x, y, z) ((x & y) | (~x & z))
 #define G(x, y, z) ((x & z) | (y & ~z))
 #define H(x, y, z) (x ^ y ^ z)
@@ -9,13 +14,17 @@
 #define LEFTROTATE(x, c) (((x) << (c)) | ((x) >> (32 - (c))))
 
 
-/* Global variables */
+/*
+ * Global variables
+ */
+
 static const uint32_t R[64] = {
 	7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,
 	5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,
 	4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,
 	6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21
 };
+
 
 static const uint32_t K[64] = {
 	0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
@@ -37,11 +46,11 @@ static const uint32_t K[64] = {
 };
 
 
-/* Structures */
+/*
+ * Functions
+ */
 
-
-/* Code */
-int md5_init( t_md5_ctx *ctx )
+int md5_init(t_md5_ctx *ctx)
 {
 	ctx->state[0] = 0x67452301;
 	ctx->state[1] = 0xefcdab89;
@@ -54,48 +63,43 @@ int md5_init( t_md5_ctx *ctx )
 	return (0);
 }
 
-static void md5_transform( t_md5_ctx *ctx )
+
+static void md5_transform(t_md5_ctx *ctx)
 {
+	uint8_t  i;
 	uint32_t W[16];
 	uint32_t a, b, c, d;
 	uint32_t f, g, tmp;
-	uint8_t i;
 
-	for ( i = 0; i < 16; ++i )
-	{
-		W[i] = ( ctx->buffer[i * 4] ) | ( ctx->buffer[i * 4 + 1] << 8 ) |
-			   ( ctx->buffer[i * 4 + 2] << 16 ) | ( ctx->buffer[i * 4 + 3] << 24 );
+	for (i = 0; i < 16; i += 1) {
+		W[i] = (ctx->buffer[i * 4]) |
+		       (ctx->buffer[i * 4 + 1] << 8) |
+		       (ctx->buffer[i * 4 + 2] << 16) |
+		       (ctx->buffer[i * 4 + 3] << 24);
 	}
 
-	a = ctx->state[0]; b = ctx->state[1]; c = ctx->state[2]; d = ctx->state[3];
+	a = ctx->state[0]; b = ctx->state[1];
+	c = ctx->state[2]; d = ctx->state[3];
 
-	for ( i = 0; i < 64; ++i )
-	{
-		if ( i < 16 )
-		{
-			f = F( b, c, d );
+	for (i = 0; i < 64; i += 1) {
+		if (i < 16) {
+			f = F(b, c, d);
 			g = i;
-		}
-		else if ( i < 32 )
-		{
-			f = G( b, c, d );
-			g = ( 5 * i + 1 ) % 16;
-		}
-		else if ( i < 48 )
-		{
-			f = H( b, c, d );
-			g = ( 3 * i + 5 ) % 16;
-		}
-		else
-		{
-			f = I( b, c, d );
-			g = ( 7 * i ) % 16;
+		} else if (i < 32) {
+			f = G(b, c, d);
+			g = (5 * i + 1) % 16;
+		} else if (i < 48) {
+			f = H(b, c, d);
+			g = (3 * i + 5) % 16;
+		} else {
+			f = I(b, c, d);
+			g = (7 * i) % 16;
 		}
 
 		tmp = d;
 		d = c;
 		c = b;
-		b = b + LEFTROTATE( ( a + f + K[i] + W[g] ), R[i]);
+		b = b + LEFTROTATE((a + f + K[i] + W[g]), R[i]);
 		a = tmp;
 	}
 
@@ -105,16 +109,15 @@ static void md5_transform( t_md5_ctx *ctx )
 	ctx->state[3] += d;
 }
 
-int md5_update( t_md5_ctx *ctx, const uint8_t *data, const size_t len )
+
+int md5_update(t_md5_ctx *ctx, const uint8_t *data, const size_t len)
 {
-	for ( size_t i = 0; i < len; ++i )
-	{
+	for (size_t i = 0; i < len; i += 1) {
 		ctx->buffer[ctx->buffer_len++] = data[i];
 		ctx->bitlen += 8;
 
-		if ( ctx->buffer_len == 64 )
-		{
-			md5_transform( ctx );
+		if (ctx->buffer_len == 64) {
+			md5_transform(ctx);
 			ctx->buffer_len = 0;
 		}
 	}
@@ -122,63 +125,66 @@ int md5_update( t_md5_ctx *ctx, const uint8_t *data, const size_t len )
 	return (1);
 }
 
-int md5_final( uint8_t hash[16], t_md5_ctx *ctx )
+
+int md5_final(uint8_t hash[16], t_md5_ctx *ctx)
 {
 	ctx->buffer[ctx->buffer_len++] = 0x80;
 
-	if ( ctx->buffer_len > 56 )
-	{
-		while ( ctx->buffer_len < 64 )
+	if (ctx->buffer_len > 56) {
+		while (ctx->buffer_len < 64)
 			ctx->buffer[ctx->buffer_len++] = 0x00;
-		md5_transform( ctx );
+		md5_transform(ctx);
 		ctx->buffer_len = 0;
 	}
 
-	while ( ctx->buffer_len < 56 )
+	while (ctx->buffer_len < 56)
 		ctx->buffer[ctx->buffer_len++] = 0x00;
 
 	ctx->buffer[ctx->buffer_len++] = ctx->bitlen & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 8 ) & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 16 ) & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 24 ) & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 32 ) & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 40 ) & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 48 ) & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 56 ) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 8) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 16) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 24) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 32) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 40) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 48) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 56) & 0xff;
 
-	md5_transform( ctx );
+	md5_transform(ctx);
 
-	for ( uint8_t i = 0; i < 4; ++i )
-	{
-		hash[i * 4] = ( ctx->state[i] ) & 0xff;
-		hash[i * 4 + 1] = ( ctx->state[i] >> 8 ) & 0xff;
-		hash[i * 4 + 2] = ( ctx->state[i] >> 16 ) & 0xff;
-		hash[i * 4 + 3] = ( ctx->state[i] >> 24 ) & 0xff;
+	for (uint8_t i = 0; i < 4; i += 1) {
+		hash[i * 4] = (ctx->state[i]) & 0xff;
+		hash[i * 4 + 1] = (ctx->state[i] >> 8) & 0xff;
+		hash[i * 4 + 2] = (ctx->state[i] >> 16) & 0xff;
+		hash[i * 4 + 3] = (ctx->state[i] >> 24) & 0xff;
 	}
 
 	return (1);
 }
 
-void md5( const uint8_t *data, size_t len, uint8_t hash[16] )
+
+void md5(const uint8_t *data, const size_t len, uint8_t hash[16])
 {
 	t_md5_ctx ctx;
 
-	md5_init( &ctx );
-	md5_update( &ctx, data, len );
-	md5_final( hash, &ctx );
+	md5_init(&ctx);
+	md5_update(&ctx, data, len);
+	md5_final(hash, &ctx);
 }
+
 
 int md5_init_wrap(void *ctx)
 {
-	return md5_init((t_md5_ctx *)ctx);
+	return (md5_init((t_md5_ctx *)ctx));
 }
+
 
 int md5_update_wrap(void *ctx, const uint8_t *data, size_t len)
 {
-	return md5_update((t_md5_ctx *)ctx, data, len);
+	return (md5_update((t_md5_ctx *)ctx, data, len));
 }
+
 
 int md5_final_wrap(uint8_t *out, void *ctx)
 {
-	return md5_final(out, (t_md5_ctx *)ctx);
+	return (md5_final(out, (t_md5_ctx *)ctx));
 }
