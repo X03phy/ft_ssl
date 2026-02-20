@@ -37,6 +37,7 @@ BOLD CYN "\nFlags:\n" RST \
  */
 
 typedef enum e_hash_input_type {
+	HASH_INPUT_STDIN,
 	HASH_INPUT_STRING,
 	HASH_INPUT_FILE
 } e_hash_input_type;

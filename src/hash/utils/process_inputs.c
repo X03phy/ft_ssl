@@ -64,27 +64,27 @@ int get_content_fd( int fd, char **lineptr, size_t *n )
 	return ( 1 );
 }
 
-#include <stdio.h>
 static int process_stdin(t_hash_ctx *hctx)
 {
-	char *line;
-	size_t total_len;
-	uint8_t      *digest;
+    char *line = NULL;
+    size_t total_len = 0;
+    uint8_t *digest = malloc(hctx->algo->digest_size);
+    if (!digest)
+        return 0;
 
-	digest = malloc(hctx->algo->digest_size);
+    if (!get_content_fd(0, &line, &total_len)) {
+        free(digest);
+        return 0;
+    }
 
-	get_content_fd(0, &line, &total_len);
-	printf("line = %s\n", line);
-	hctx->algo->update(hctx->algo_ctx, (uint8_t *)line, total_len);
-	hctx->algo->final(digest, hctx->algo_ctx);
-	size_t i = 0;
+    hctx->algo->update(hctx->algo_ctx, (uint8_t *)line, total_len);
+    hctx->algo->final(digest, hctx->algo_ctx);
+    t_hash_input inpu = { HASH_INPUT_STDIN, "stdin" };
+    print_hash(hctx, &inpu, digest);
 
-	while (i < hctx->algo->digest_size) {
-		printf("%02x", digest[i]);
-		i += 1;
-	}
-	printf("\n");
-	return (1);
+    free(line);
+    free(digest);
+    return 1;
 }
 
 
