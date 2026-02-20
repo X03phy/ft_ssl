@@ -1,4 +1,4 @@
-#include "tools.h"
+#include "utils/str.h"
 #include <stdlib.h> // malloc(), NULL
 #include <string.h> // memcpy()
 
