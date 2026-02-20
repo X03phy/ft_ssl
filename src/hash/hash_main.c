@@ -56,10 +56,8 @@ int hash_main(int argc, char **argv)
 		return (0);
 	}
 
-	if (hctx.flags & (1 << FLAG_H)) {
-		printf(HASH_USAGE_FORMAT, argv[0], argv[1]);
-		printf(HASH_HELP_FLAGS_STRING);
-	}
+	if (hctx.flags & (1 << FLAG_H))
+		printf(HASH_HELP_FORMAT, argv[0], argv[1]);
 
 	hctx.algo_ctx = malloc(hctx.algo->ctx_size);
 	if (!hctx.algo_ctx) {

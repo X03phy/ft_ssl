@@ -5,6 +5,7 @@
  * Includes
  */
 
+#include "colors.h"
 #include <stdint.h> // uintX_t
 #include <stddef.h> // size_t
 #include "list.h"
@@ -15,9 +16,20 @@
  * Macros
  */
 
-#define FLAG_P 0 // a enlever
-#define FLAG_Q 1
-#define FLAG_R 2
+#define FLAG_H 0
+#define FLAG_P 1
+#define FLAG_Q 2
+#define FLAG_R 3
+
+#define HASH_HELP_FORMAT \
+BOLD CYN "Usage:\n" RST \
+"  %s %s [flags] [files]\n" \
+BOLD CYN "Flags:\n" RST \
+"  -p                Read from STDIN, echo to STDOUT and append digest\n" \
+"  -q, --quiet       Suppress all normal output\n" \
+"  -r, --reverse     Reverse the output format\n" \
+"  -s, --string STR  Compute digest of the given string\n" \
+"  -h, --help        Display this help message and exit\n"
 
 
 /*
