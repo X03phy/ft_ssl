@@ -1,32 +1,29 @@
 #include "ft_ssl.h"
-#include "colors.h"
+#include "utils/colors.h"
 #include <string.h> // strcmp()
 #include <stdio.h> // fprintf(), stderr
 
 
 /*
  * Macros
-*/
+ */
 
 #define INVALID_COMMAND_FORMAT RED "%s: Error: '%s' is an invalid command.\n" RST
-#define USAGE_FORMAT GRN "\nUsage: %s command [flags] [file/string]\n" RST
-#define GLOBAL_HELP_STRING YEL "\n" \
-                               "Message Digest commands:\n" \
-                               "md5\n" \
-                               "sha256\n" \
-                               "whirlpool\n" \
-                               "\n" \
-                               "Flags:\n" \
-                               "-p -q -r -s\n" \
-                               "\n" \
-                               "Cipher commands:\n" \
-                               "base64\n" \
-                               "\n" RST
+
+#define HELP_FORMAT \
+BOLD CYN "Usage:\n" RST \
+"  %s [command] [flags] [files]\n" \
+BOLD CYN "\nMessage digest commands:\n" RST \
+"  md5\n" \
+"  sha256\n" \
+"  whirlpool\n" \
+BOLD CYN "\nFlags:\n" RST \
+"  -p -q -r -s\n" \
 
 
 /*
  * Functions
-*/
+ */
 
 static int do_cmd(int argc, char **argv)
 {
@@ -39,8 +36,7 @@ static int do_cmd(int argc, char **argv)
 	}
 
 	fprintf(stderr, INVALID_COMMAND_FORMAT, argv[0], argv[1]);
-	fprintf(stderr, USAGE_FORMAT, argv[0]);
-	fprintf(stderr, GLOBAL_HELP_STRING);
+	fprintf(stderr, HELP_FORMAT, argv[0]);
 
 	return (1);
 }
