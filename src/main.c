@@ -38,7 +38,7 @@ static int do_cmd(int argc, char **argv)
 	fprintf(stderr, INVALID_COMMAND_FORMAT, argv[0], argv[1]);
 	fprintf(stderr, HELP_FORMAT, argv[0]);
 
-	return (1);
+	return (0);
 }
 
 
