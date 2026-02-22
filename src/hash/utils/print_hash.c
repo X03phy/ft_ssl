@@ -40,7 +40,7 @@ void print_hash(t_hash_ctx *ctx, t_hash_input *input, uint8_t *digest)
 
 	if (input->type == HASH_INPUT_FILE)
 		printf("%s(%s) = ", ctx->algo->name, input->data);
-	if (input->type == HASH_INPUT_STRING)
+	else if (input->type == HASH_INPUT_STRING)
 		printf("%s(\"%s\") = ", ctx->algo->name, input->data);
 	else
 		printf("(stdin) = ");
