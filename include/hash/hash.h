@@ -29,7 +29,8 @@ BOLD CYN "\nFlags:\n" RST \
 "  -p, --append        Read from STDIN, echo to STDOUT and append digest\n" \
 "  -q, --quiet         Suppress all normal output\n" \
 "  -r, --reverse       Reverse the output format\n" \
-"  -s, --string [str]  Compute digest of the given string\n"
+"  -s, --string [str]  Compute digest of the given string\n" \
+"\n"
 
 
 /*

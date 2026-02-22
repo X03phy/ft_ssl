@@ -32,7 +32,7 @@ int hash_main(int argc, char **argv)
 
 	hctx.algo = get_hash_algo(argv[1]);
 
-	if (parse_inputs(&hctx, argc, argv)) {
+	if (!parse_inputs(&hctx, argc, argv)) {
 		list_clear(&hctx.inputs, free);
 		return (0);
 	}

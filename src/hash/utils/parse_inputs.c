@@ -61,6 +61,7 @@ int parse_inputs(t_hash_ctx *hctx, int argc, char **argv)
 			} else if ((argv[i][1] == 's' && argv[i][2] == '\0') || strcmp("--string", argv[i]) == 0) {
 				if (i + 1 >= argc) {
 					fprintf(stderr, RED "%s %s: Error: expecting argument after '%s'\n" RST, argv[0], argv[1], argv[i]);
+					fprintf(stderr, "\n");
 					fprintf(stderr, HASH_HELP_FORMAT, argv[0], argv[1]);
 					return (0);
 				}
@@ -69,6 +70,7 @@ int parse_inputs(t_hash_ctx *hctx, int argc, char **argv)
 					return (0);
 			} else {
 				fprintf(stderr, HASH_INVALID_OPTION_FORMAT, argv[0], argv[1], argv[i]);
+				fprintf(stderr, "\n");
 				fprintf(stderr, HASH_HELP_FORMAT, argv[0], argv[1]);
 				return (0);
 			}

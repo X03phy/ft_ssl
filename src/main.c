@@ -19,6 +19,7 @@ BOLD CYN "\nMessage digest commands:\n" RST \
 "  whirlpool\n" \
 BOLD CYN "\nFlags:\n" RST \
 "  -p -q -r -s\n" \
+"\n"
 
 
 /*
@@ -36,6 +37,7 @@ static int do_cmd(int argc, char **argv)
 	}
 
 	fprintf(stderr, INVALID_COMMAND_FORMAT, argv[0], argv[1]);
+	fprintf(stderr, "\n");
 	fprintf(stderr, HELP_FORMAT, argv[0]);
 
 	return (0);
