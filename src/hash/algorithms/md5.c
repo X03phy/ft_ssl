@@ -184,7 +184,7 @@ int md5_update_wrap(void *ctx, const uint8_t *data, size_t len)
 }
 
 
-int md5_final_wrap(uint8_t *out, void *ctx)
+int md5_final_wrap(uint8_t hash[16], void *ctx)
 {
-	return (md5_final(out, (t_md5_ctx *)ctx));
+	return (md5_final(hash, (t_md5_ctx *)ctx));
 }

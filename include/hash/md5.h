@@ -32,4 +32,4 @@ int md5_final(uint8_t hash[16], t_md5_ctx *ctx);
 
 int md5_init_wrap(void *ctx);
 int md5_update_wrap(void *ctx, const uint8_t *data, const size_t len);
-int md5_final_wrap(uint8_t *out, void *ctx);
+int md5_final_wrap(uint8_t hash[16], void *ctx);
