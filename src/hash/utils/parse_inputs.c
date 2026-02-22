@@ -52,6 +52,7 @@ int parse_inputs(t_hash_ctx *hctx, int argc, char **argv)
 		if (argv[i][0] == '-') {
 			if ((argv[i][1] == 'h' && argv[i][2] == '\0') || strcmp("--help", argv[i]) == 0) {
 				hctx->flags |= 1 << FLAG_H;
+				return (1);
 			} else if ((argv[i][1] == 'p' && argv[i][2] == '\0') || strcmp("--append", argv[i]) == 0) {
 				hctx->flags |= 1 << FLAG_P;
 			} else if ((argv[i][1] == 'q' && argv[i][2] == '\0') || strcmp("--quiet", argv[i]) == 0) {
