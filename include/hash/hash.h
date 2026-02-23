@@ -5,12 +5,15 @@
  * Includes
  */
 
+#include <stdint.h>  // uintX_t
+#include <stddef.h>  // size_t
+
 #include "utils/colors.h"
-#include <stdint.h> // uintX_t
-#include <stddef.h> // size_t
 #include "utils/list.h"
+
 #include "hash/md5.h"
 #include "hash/sha256.h"
+#include "hash/whirlpool.h"
 
 
 /*
@@ -95,7 +98,16 @@ static const t_hash_algo g_hash_algos[] = {
 		sha256_final_wrap,
 		sizeof(t_sha256_ctx),
 		32
-	},	{NULL, NULL, NULL, NULL, 0, 0}
+	},
+	{
+		"whirlpool",
+		whirlpool_init_wrap,
+		whirlpool_update_wrap,
+		whirlpool_final_wrap,
+		sizeof(t_whirlpool_ctx),
+		64
+	},
+	{NULL, NULL, NULL, NULL, 0, 0}
 };
 
 

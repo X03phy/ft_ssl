@@ -1,9 +1,11 @@
-#include "whirlpool.h"
+#include "hash/whirlpool.h"
+#include <string.h>  // memset()
 
-/* For ft_memset() */
-#include "memory.h"
 
-/* Global variables */
+/*
+ * Global variables
+ */
+
 static const uint64_t C0[256] = {
 	0x18186018c07830d8, 0x23238c2305af4626, 0xc6c63fc67ef991b8, 0xe8e887e8136fcdfb,
 	0x878726874ca113cb, 0xb8b8dab8a9626d11, 0x0101040108050209, 0x4f4f214f426e9e0d,
@@ -70,6 +72,7 @@ static const uint64_t C0[256] = {
 	0xcccc17cc2edb85e2, 0x424215422a578468, 0x98985a98b4c22d2c, 0xa4a4aaa4490e55ed,
 	0x2828a0285d885075, 0x5c5c6d5cda31b886, 0xf8f8c7f8933fed6b, 0x8686228644a411c2,
 };
+
 
 static const uint64_t C1[256] = {
 	0xd818186018c07830, 0x2623238c2305af46, 0xb8c6c63fc67ef991, 0xfbe8e887e8136fcd,
@@ -138,6 +141,7 @@ static const uint64_t C1[256] = {
 	0x752828a0285d8850, 0x865c5c6d5cda31b8, 0x6bf8f8c7f8933fed, 0xc28686228644a411,
 };
 
+
 static const uint64_t C2[256] = {
 	0x30d818186018c078, 0x462623238c2305af, 0x91b8c6c63fc67ef9, 0xcdfbe8e887e8136f,
 	0x13cb878726874ca1, 0x6d11b8b8dab8a962, 0x0209010104010805, 0x9e0d4f4f214f426e,
@@ -204,6 +208,7 @@ static const uint64_t C2[256] = {
 	0x85e2cccc17cc2edb, 0x8468424215422a57, 0x2d2c98985a98b4c2, 0x55eda4a4aaa4490e,
 	0x50752828a0285d88, 0xb8865c5c6d5cda31, 0xed6bf8f8c7f8933f, 0x11c28686228644a4,
 };
+
 
 static const uint64_t C3[256] = {
 	0x7830d818186018c0, 0xaf462623238c2305, 0xf991b8c6c63fc67e, 0x6fcdfbe8e887e813,
@@ -272,6 +277,7 @@ static const uint64_t C3[256] = {
 	0x8850752828a0285d, 0x31b8865c5c6d5cda, 0x3fed6bf8f8c7f893, 0xa411c28686228644,
 };
 
+
 static const uint64_t C4[256] = {
 	0xc07830d818186018, 0x05af462623238c23, 0x7ef991b8c6c63fc6, 0x136fcdfbe8e887e8,
 	0x4ca113cb87872687, 0xa9626d11b8b8dab8, 0x0805020901010401, 0x426e9e0d4f4f214f,
@@ -338,6 +344,7 @@ static const uint64_t C4[256] = {
 	0x2edb85e2cccc17cc, 0x2a57846842421542, 0xb4c22d2c98985a98, 0x490e55eda4a4aaa4,
 	0x5d8850752828a028, 0xda31b8865c5c6d5c, 0x933fed6bf8f8c7f8, 0x44a411c286862286,
 };
+
 
 static const uint64_t C5[256] = {
 	0x18c07830d8181860, 0x2305af462623238c, 0xc67ef991b8c6c63f, 0xe8136fcdfbe8e887,
@@ -406,6 +413,7 @@ static const uint64_t C5[256] = {
 	0x285d8850752828a0, 0x5cda31b8865c5c6d, 0xf8933fed6bf8f8c7, 0x8644a411c2868622,
 };
 
+
 static const uint64_t C6[256] = {
 	0x6018c07830d81818, 0x8c2305af46262323, 0x3fc67ef991b8c6c6, 0x87e8136fcdfbe8e8,
 	0x26874ca113cb8787, 0xdab8a9626d11b8b8, 0x0401080502090101, 0x214f426e9e0d4f4f,
@@ -472,6 +480,7 @@ static const uint64_t C6[256] = {
 	0x17cc2edb85e2cccc, 0x15422a5784684242, 0x5a98b4c22d2c9898, 0xaaa4490e55eda4a4,
 	0xa0285d8850752828, 0x6d5cda31b8865c5c, 0xc7f8933fed6bf8f8, 0x228644a411c28686,
 };
+
 
 static const uint64_t C7[256] = {
 	0x186018c07830d818, 0x238c2305af462623, 0xc63fc67ef991b8c6, 0xe887e8136fcdfbe8,
@@ -540,149 +549,171 @@ static const uint64_t C7[256] = {
 	0x28a0285d88507528, 0x5c6d5cda31b8865c, 0xf8c7f8933fed6bf8, 0x86228644a411c286,
 };
 
+
 static const uint64_t RC[10] = {
 	0x1823c6e887b8014f, 0x36a6d2f5796f9152, 0x60bc9b8ea30c7b35, 0x1de0d7c22e4bfe57, 0x157737e59ff04ada,
 	0x58c9290ab1a06b85, 0xbd5d10f4cb3e0567, 0xe427418ba77d95d8, 0xfbee7c66dd17479e, 0xca2dbf07ad5a8333
 };
 
 
-/* Structures */
-typedef struct s_whirlpool_ctx
-{
-	uint64_t state[8];  // H0 to H7
-	uint64_t bitlen;    // Total length in bits
-	uint8_t buffer[64]; // 512 bits (64 bytes) buffer
-	size_t buffer_len;  // Actual length of the buffer
-} t_whirlpool_ctx;
+/*
+ * Functions
+ */
 
-
-/* Code */
-static void whirlpool_init( t_whirlpool_ctx *ctx )
+int whirlpool_init(t_whirlpool_ctx *ctx)
 {
-	ft_memset( ctx->buffer, 0, sizeof( ctx->buffer ) );
-	ft_memset( ctx->state, 0, sizeof( ctx->state ) );
+	memset(ctx->buffer, 0, sizeof(ctx->buffer));
+	memset(ctx->state, 0, sizeof(ctx->state));
 
 	ctx->bitlen = 0;
 	ctx->buffer_len = 0;
+
+	return (1);
 }
 
-static void whirlpool_transform( t_whirlpool_ctx *ctx )
-{
-	uint64_t K[8], L[8], state[8], block[8];
-	uint8_t i, r;
 
-	for ( i = 0; i < 8; ++i )
-	{
-		block[i] =
-			( ( uint64_t ) ctx->buffer[i * 8] << 56) |
-			( ( uint64_t ) ctx->buffer[i * 8 + 1] << 48) |
-			( ( uint64_t ) ctx->buffer[i * 8 + 2] << 40) |
-			( ( uint64_t ) ctx->buffer[i * 8 + 3] << 32) |
-			( ( uint64_t ) ctx->buffer[i * 8 + 4] << 24) |
-			( ( uint64_t ) ctx->buffer[i * 8 + 5] << 16) |
-			( ( uint64_t ) ctx->buffer[i * 8 + 6] << 8) |
-			( ( uint64_t ) ctx->buffer[i * 8 + 7]);
+static void whirlpool_transform(t_whirlpool_ctx *ctx)
+{
+	uint8_t i, r;
+	uint64_t K[8], L[8], state[8], block[8];
+
+	for (i = 0; i < 8; i += 1) {
+		block[i] = ((uint64_t)ctx->buffer[i * 8] << 56) |
+			   ((uint64_t)ctx->buffer[i * 8 + 1] << 48) |
+			   ((uint64_t)ctx->buffer[i * 8 + 2] << 40) |
+			   ((uint64_t)ctx->buffer[i * 8 + 3] << 32) |
+			   ((uint64_t)ctx->buffer[i * 8 + 4] << 24) |
+			   ((uint64_t)ctx->buffer[i * 8 + 5] << 16) |
+			   ((uint64_t)ctx->buffer[i * 8 + 6] << 8) |
+			   ((uint64_t)ctx->buffer[i * 8 + 7]);
 
 		K[i] = ctx->state[i];
 		state[i] = block[i] ^ ctx->state[i];
 	}
 
-	for ( r = 0; r < 10; ++r )
-	{
-		for ( i = 0; i < 8; ++i )
-		{
-			L[i] = C0[( K[i] >> 56 ) & 0xFF] ^
-				   C1[( K[( i - 1 ) & 7] >> 48 ) & 0xFF] ^
-				   C2[( K[( i - 2 ) & 7] >> 40 ) & 0xFF] ^
-				   C3[( K[( i - 3 ) & 7] >> 32 ) & 0xFF] ^
-				   C4[( K[( i - 4 ) & 7] >> 24 ) & 0xFF] ^
-				   C5[( K[( i - 5 ) & 7] >> 16 ) & 0xFF] ^
-				   C6[( K[( i - 6 ) & 7] >> 8 ) & 0xFF] ^
-				   C7[( K[( i - 7 ) & 7] ) & 0xFF];
+	for (r = 0; r < 10; r += 1) {
+		for (i = 0; i < 8; i += 1) {
+			L[i] = C0[(K[i] >> 56) & 0xFF] ^
+			       C1[(K[(i - 1) & 7] >> 48) & 0xFF] ^
+			       C2[(K[(i - 2) & 7] >> 40) & 0xFF] ^
+			       C3[(K[(i - 3) & 7] >> 32) & 0xFF] ^
+			       C4[(K[(i - 4) & 7] >> 24) & 0xFF] ^
+			       C5[(K[(i - 5) & 7] >> 16) & 0xFF] ^
+			       C6[(K[(i - 6) & 7] >> 8) & 0xFF] ^
+			       C7[(K[(i - 7) & 7]) & 0xFF];
 		}
+
 		L[0] ^= RC[r];
-		for ( i = 0; i < 8; ++i )
+
+		for (i = 0; i < 8; i += 1)
 			K[i] = L[i];
 
-		for ( i = 0; i < 8; ++i )
-		{
-			L[i] = C0[( state[i] >> 56 ) & 0xFF] ^
-				   C1[( state[( i - 1 ) & 7] >> 48 ) & 0xFF] ^
-				   C2[( state[( i - 2 ) & 7] >> 40 ) & 0xFF] ^
-				   C3[( state[( i - 3 ) & 7] >> 32 ) & 0xFF] ^
-				   C4[( state[( i - 4 ) & 7] >> 24 ) & 0xFF] ^
-				   C5[( state[( i - 5 ) & 7] >> 16 ) & 0xFF] ^
-				   C6[( state[( i - 6 ) & 7] >> 8 ) & 0xFF] ^
-				   C7[( state[( i - 7 ) & 7] ) & 0xFF] ^
-				   K[i];
+		for (i = 0; i < 8; i += 1) {
+			L[i] = C0[(state[i] >> 56) & 0xFF] ^
+			       C1[(state[(i - 1) & 7] >> 48) & 0xFF] ^
+			       C2[(state[(i - 2) & 7] >> 40) & 0xFF] ^
+			       C3[(state[(i - 3) & 7] >> 32) & 0xFF] ^
+			       C4[(state[(i - 4) & 7] >> 24) & 0xFF] ^
+			       C5[(state[(i - 5) & 7] >> 16) & 0xFF] ^
+			       C6[(state[(i - 6) & 7] >> 8) & 0xFF] ^
+			       C7[(state[(i - 7) & 7]) & 0xFF] ^
+			       K[i];
 		}
-		for ( i = 0; i < 8; ++i )
+
+		for (i = 0; i < 8; i += 1)
 			state[i] = L[i];
 	}
 
-	for ( i = 0; i < 8; ++i )
+	for (i = 0; i < 8; i += 1)
 		ctx->state[i] ^= state[i] ^ block[i];
 }
 
-static void whirlpool_update( t_whirlpool_ctx *ctx, const uint8_t *data, const size_t len )
+
+int whirlpool_update(t_whirlpool_ctx *ctx, const uint8_t *data, const size_t len)
 {
-	for ( size_t i = 0; i < len; ++i )
-	{
+	size_t i;
+
+	for (i = 0; i < len; i += 1) {
 		ctx->buffer[ctx->buffer_len++] = data[i];
 		ctx->bitlen += 8;
 
-		if ( ctx->buffer_len == 64 )
-		{
-			whirlpool_transform( ctx );
+		if (ctx->buffer_len == 64) {
+			whirlpool_transform(ctx);
 			ctx->buffer_len = 0;
 		}
 	}
+
+	return (1);
 }
 
-static void whirlpool_final( uint8_t hash[64], t_whirlpool_ctx *ctx )
+
+int whirlpool_final(uint8_t digest[64], t_whirlpool_ctx *ctx)
 {
+	uint8_t i;
+
 	ctx->buffer[ctx->buffer_len++] = 0x80;
 
-	if ( ctx->buffer_len > 32 )
-	{
-		while ( ctx->buffer_len < 64 )
+	if (ctx->buffer_len > 32) {
+		while (ctx->buffer_len < 64)
 			ctx->buffer[ctx->buffer_len++] = 0x00;
-		whirlpool_transform( ctx );
+		whirlpool_transform(ctx);
 		ctx->buffer_len = 0;
 	}
 
-	while ( ctx->buffer_len < 56 )
+	while (ctx->buffer_len < 56)
 		ctx->buffer[ctx->buffer_len++] = 0x00;
 
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 56 ) & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 48 ) & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 40 ) & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 32 ) & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 24 ) & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 16 ) & 0xff;
-	ctx->buffer[ctx->buffer_len++] = ( ctx->bitlen >> 8 ) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 56) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 48) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 40) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 32) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 24) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 16) & 0xff;
+	ctx->buffer[ctx->buffer_len++] = (ctx->bitlen >> 8) & 0xff;
 	ctx->buffer[ctx->buffer_len++] = ctx->bitlen & 0xff;
 
-	whirlpool_transform( ctx );
+	whirlpool_transform(ctx);
 
-	for ( uint8_t i = 0; i < 8; ++i )
-	{
-		hash[i * 8] = ( ctx->state[i] >> 56 ) & 0xff;
-		hash[i * 8 + 1] = ( ctx->state[i] >> 48 ) & 0xff;
-		hash[i * 8 + 2] = ( ctx->state[i] >> 40 ) & 0xff;
-		hash[i * 8 + 3] = ( ctx->state[i] >> 32 ) & 0xff;
-		hash[i * 8 + 4] = ( ctx->state[i] >> 24 ) & 0xff;
-		hash[i * 8 + 5] = ( ctx->state[i] >> 16 ) & 0xff;
-		hash[i * 8 + 6] = ( ctx->state[i] >> 8 ) & 0xff;
-		hash[i * 8 + 7] = ctx->state[i] & 0xff;
+	for (i = 0; i < 8; i += 1) {
+		digest[i * 8] = (ctx->state[i] >> 56) & 0xff;
+		digest[i * 8 + 1] = (ctx->state[i] >> 48) & 0xff;
+		digest[i * 8 + 2] = (ctx->state[i] >> 40) & 0xff;
+		digest[i * 8 + 3] = (ctx->state[i] >> 32) & 0xff;
+		digest[i * 8 + 4] = (ctx->state[i] >> 24) & 0xff;
+		digest[i * 8 + 5] = (ctx->state[i] >> 16) & 0xff;
+		digest[i * 8 + 6] = (ctx->state[i] >> 8) & 0xff;
+		digest[i * 8 + 7] = ctx->state[i] & 0xff;
 	}
+
+	return (1);
 }
 
-void whirlpool( const uint8_t *data, size_t len, uint8_t hash[64] )
+
+int whirlpool(uint8_t digest[64], const uint8_t *data, const size_t len)
 {
 	t_whirlpool_ctx ctx;
 
-	whirlpool_init( &ctx );
-	whirlpool_update( &ctx, data, len );
-	whirlpool_final( hash, &ctx );
+	whirlpool_init(&ctx);
+	whirlpool_update(&ctx, data, len);
+	whirlpool_final(digest, &ctx);
+
+	return (1);
+}
+
+
+int whirlpool_init_wrap(void *ctx)
+{
+	return (whirlpool_init((t_whirlpool_ctx *)ctx));
+}
+
+
+int whirlpool_update_wrap(void *ctx, const uint8_t *data, const size_t len)
+{
+	return (whirlpool_update((t_whirlpool_ctx *)ctx, data, len));
+}
+
+
+int whirlpool_final_wrap(uint8_t digest[64], void *ctx)
+{
+	return (whirlpool_final(digest, (t_whirlpool_ctx *)ctx));
 }
