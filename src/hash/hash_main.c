@@ -31,7 +31,7 @@ static const t_hash_algo *get_hash_algo(const char *name)
 		i += 1;
 	}
 
-	return (NULL);
+	return (NULL); // This should not happen
 }
 
 

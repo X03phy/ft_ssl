@@ -30,23 +30,20 @@ void print_hash(uint8_t *digest, t_hash_ctx *ctx, t_hash_input *input)
 	if (ctx->flags & (1 << FLAG_R)) {
 		print_hex(digest, ctx->algo->digest_size);
 
-		if (input->type == HASH_INPUT_STRING)
-			printf(" \"%s\"", input->data);
-		else if (input->type == HASH_INPUT_FILE)
+		if (input->type == HASH_INPUT_FILE ||
+			 input->type == HASH_INPUT_STDIN)
 			printf(" %s", input->data);
-		else if (input->type == HASH_INPUT_STDIN)
-			printf(" stdin");
+		else if (input->type == HASH_INPUT_STRING)
+			printf(" \"%s\"", input->data);
 
 		printf("\n");
 		return ;
 	}
 
-	if (input->type == HASH_INPUT_FILE)
+	if (input->type == HASH_INPUT_FILE || input->type == HASH_INPUT_STDIN)
 		printf("%s(%s) = ", ctx->algo->name, input->data);
 	else if (input->type == HASH_INPUT_STRING)
 		printf("%s(\"%s\") = ", ctx->algo->name, input->data);
-	else if (input->type == HASH_INPUT_STDIN)
-		printf("(stdin) = ");
 
 	print_hex(digest, ctx->algo->digest_size);
 	printf("\n");

@@ -1,11 +1,9 @@
 #include "hash/hash.h"
 
-#include "utils/str.h"
-
 #include <stdint.h>  // uintX_t
 #include <unistd.h>  // ssize_t, read(), close()
-#include <fcntl.h>   // open(), O_RDONLY
 #include <stdio.h>   // perror()
+#include <fcntl.h>   // open(), O_RDONLY
 #include <stddef.h>  // size_t
 #include <string.h>  // strlen()
 #include <stdlib.h>  // malloc(), free()
@@ -22,77 +20,35 @@
  * Functions
  */
 
-
-#include <stdlib.h>
-#include <string.h>
-
-int get_content_fd( int fd, char **lineptr, size_t *n )
+static int process_stdin(uint8_t *digest, t_hash_ctx *ctx)
 {
-	*n = 0;
+	ssize_t	     bytes_read;
+	uint8_t	     buffer[BUFFER_SIZE];
+	t_hash_input input;
 
-	*lineptr = calloc( 1, sizeof(char) );
-	if ( !*lineptr )
-	{
-		return ( 0 );
+	while ((bytes_read = read(STDIN_FILENO, buffer, BUFFER_SIZE)) > 0) {
+		if (!ctx->algo->update(ctx->algo_ctx, buffer, bytes_read))
+			return (0);
 	}
 
-	int  r;
-	char buf[43];
-	char *tmp;
-
-	while ( 1 )
-	{
-		r = read( fd, buf, 42 );
-		if ( r == -1 ) {
-			free( *lineptr );
-			return ( 0 );
-		}
-
-		if ( r == 0 )
-			break ;
-
-		*n += r;
-		buf[r] = '\0';
-
-		tmp = *lineptr;
-		*lineptr = strjoin( *lineptr, buf );
-		free( tmp );
-		if ( !*lineptr )
-		{
-			return ( 0 );
-		}
+	if (bytes_read < 0) {
+		perror("read failed");
+		return (0);
 	}
 
-	return ( 1 );
-}
+	ctx->algo->final(digest, ctx->algo_ctx);
 
-static int process_stdin(t_hash_ctx *hctx)
-{
-    char *line = NULL;
-    size_t total_len = 0;
-    uint8_t *digest = malloc(hctx->algo->digest_size);
-    if (!digest)
-        return 0;
+	input.type = HASH_INPUT_STDIN;
+	input.data = "stdin";
+	print_hash(digest, ctx, &input);
 
-    if (!get_content_fd(0, &line, &total_len)) {
-        free(digest);
-        return 0;
-    }
-
-    hctx->algo->update(hctx->algo_ctx, (uint8_t *)line, total_len);
-    hctx->algo->final(digest, hctx->algo_ctx);
-    t_hash_input inpu = { HASH_INPUT_STDIN, "stdin" };
-    print_hash(digest, hctx, &inpu);
-
-    free(line);
-    free(digest);
-    return 1;
+	return (1);
 }
 
 
-static int process_file(t_hash_ctx *hctx, const char *filename)
+static int process_file(t_hash_ctx *ctx, const char *filename)
 {
-	int     fd, ret;
+	int     fd;
 	ssize_t bytes_read;
 	uint8_t buffer[BUFFER_SIZE];
 
@@ -102,12 +58,15 @@ static int process_file(t_hash_ctx *hctx, const char *filename)
 		return (0);
 	}
 
-	ret = 1;
-	while (ret && (bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
-		ret = hctx->algo->update(hctx->algo_ctx, buffer, bytes_read);
+	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0) {
+		if (!ctx->algo->update(ctx->algo_ctx, buffer, bytes_read)) {
+			close(fd);
+			return (0);
+		}
+	}
 
-	if (!ret || bytes_read < 0) {
-		perror(filename);
+	if (bytes_read < 0) {
+		perror("read() failed");
 		close(fd);
 		return (0);
 	}
@@ -122,7 +81,8 @@ static int process_string(t_hash_ctx *hctx, const char *str) // check update
 	size_t len;
 
 	len = strlen(str);
-	hctx->algo->update(hctx->algo_ctx, (const uint8_t *)str, len);
+	if (!hctx->algo->update(hctx->algo_ctx, (const uint8_t *)str, len))
+		return (0);
 
 	return (1);
 }
@@ -136,40 +96,40 @@ static int process_input_dispatch(t_hash_ctx *hctx, t_hash_input *input)
 		case HASH_INPUT_STRING:
 			return (process_string(hctx, input->data));
 		default:
-			return (0);
+			return (0); // This should not happen
 	}
 }
 
 
-int process_inputs(t_hash_ctx *hctx)
+int process_inputs(t_hash_ctx *ctx)
 {
 	t_list       *node;
 	t_hash_input *input;
 	uint8_t      *digest;
 
-	digest = malloc(hctx->algo->digest_size);
+	digest = malloc(ctx->algo->digest_size);
 	if (!digest) {
 		perror("malloc() failed");
 		return (0);
 	}
 
-	node = hctx->inputs;
-	if ((hctx->flags & (1 << FLAG_P)) || !node) {
-		hctx->algo->init(hctx->algo_ctx);
-		if (!process_stdin(hctx))
+	node = ctx->inputs;
+	if ((ctx->flags & (1 << FLAG_P)) || !node) {
+		ctx->algo->init(ctx->algo_ctx);
+		if (!process_stdin(digest, ctx))
 			return (0);
 	}
 
 	while (node) {
 		input = (t_hash_input *)node->data;
 
-		hctx->algo->init(hctx->algo_ctx);
-
-		if (!process_input_dispatch(hctx, input))
+		ctx->algo->init(ctx->algo_ctx);
+		if (!process_input_dispatch(ctx, input)) {
+			free(digest);
 			return (0);
-
-		hctx->algo->final(digest, hctx->algo_ctx);
-		print_hash(digest, hctx, input);
+		}
+		ctx->algo->final(digest, ctx->algo_ctx);
+		print_hash(digest, ctx, input);
 
 		node = node->next;
 	}
