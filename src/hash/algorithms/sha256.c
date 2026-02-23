@@ -1,4 +1,5 @@
 #include "hash/sha256.h"
+
 #include <stdint.h>  // uintX_t
 #include <stddef.h>  // size_t
 

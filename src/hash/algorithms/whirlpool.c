@@ -1,4 +1,5 @@
 #include "hash/whirlpool.h"
+
 #include <string.h>  // memset()
 
 

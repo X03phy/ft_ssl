@@ -1,8 +1,20 @@
 #include "hash/hash.h"
+
 #include "utils/colors.h"
-#include <string.h> // strcmp(), memset()
-#include <stdio.h>  // NULL, fprintf, printf()
-#include <stdlib.h> // malloc()
+
+#include <string.h>  // strcmp(), memset()
+#include <stdio.h>   // NULL, fprintf, stderr, printf()
+#include <stdlib.h>  // free(), malloc()
+
+
+/*
+ * Macros
+ */
+
+#define HASH_UNKNOWN_ALGO_FORMAT \
+RED \
+"%s: Error: '%s' is an unknown message digest algorithm.\n" \
+RST
 
 
 /*
@@ -31,13 +43,19 @@ int hash_main(int argc, char **argv)
 	memset(&hctx, 0, sizeof(hctx));
 
 	hctx.algo = get_hash_algo(argv[1]);
+	if (!hctx.algo) {
+		fprintf(stderr, HASH_UNKNOWN_ALGO_FORMAT, argv[0], argv[1]);
+		fprintf(stderr, "\n");
+		fprintf(stderr, HASH_HELP_FORMAT, argv[0], argv[1]);
+		return (0);
+	}
 
 	if (!parse_inputs(&hctx, argc, argv)) {
 		list_clear(&hctx.inputs, free);
 		return (0);
 	}
 
-	if (hctx.flags & (1 << FLAG_H)) {
+	if (hctx.flags & (1 << FLAG_H)) { // Add is flag active
 		printf(HASH_HELP_FORMAT, argv[0], argv[1]);
 		list_clear(&hctx.inputs, free);
 		return (1);

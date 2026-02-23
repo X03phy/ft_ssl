@@ -1,14 +1,19 @@
 #include "ft_ssl.h"
+
 #include "utils/colors.h"
-#include <string.h> // strcmp()
-#include <stdio.h> // fprintf(), stderr
+
+#include <string.h>  // strcmp()
+#include <stdio.h>   // fprintf(), stderr
 
 
 /*
  * Macros
  */
 
-#define INVALID_COMMAND_FORMAT RED "%s: Error: '%s' is an invalid command.\n" RST
+#define INVALID_COMMAND_FORMAT \
+RED \
+"%s: Error: '%s' is an invalid command.\n" \
+RST
 
 #define HELP_FORMAT \
 BOLD CYN "Usage:\n" RST \
