@@ -1,6 +1,6 @@
 #include "hash/md5.h"
-#include <stdint.h> // uintX_t
-#include <stddef.h> // size_t
+#include <stdint.h>  // uintX_t
+#include <stddef.h>  // size_t
 
 
 /*
@@ -11,7 +11,8 @@
 #define G(x, y, z) ((x & z) | (y & ~z))
 #define H(x, y, z) (x ^ y ^ z)
 #define I(x, y, z) (y ^ (x | ~z))
-#define LEFTROTATE(x, c) (((x) << (c)) | ((x) >> (32 - (c))))
+
+#define LEFTROTATE(x, c) ((x << c) | (x >> (32 - c)))
 
 
 /*
@@ -126,7 +127,7 @@ int md5_update(t_md5_ctx *ctx, const uint8_t *data, const size_t len)
 }
 
 
-int md5_final(uint8_t hash[16], t_md5_ctx *ctx)
+int md5_final(uint8_t digest[16], t_md5_ctx *ctx)
 {
 	ctx->buffer[ctx->buffer_len++] = 0x80;
 
@@ -152,23 +153,23 @@ int md5_final(uint8_t hash[16], t_md5_ctx *ctx)
 	md5_transform(ctx);
 
 	for (uint8_t i = 0; i < 4; i += 1) {
-		hash[i * 4] = (ctx->state[i]) & 0xff;
-		hash[i * 4 + 1] = (ctx->state[i] >> 8) & 0xff;
-		hash[i * 4 + 2] = (ctx->state[i] >> 16) & 0xff;
-		hash[i * 4 + 3] = (ctx->state[i] >> 24) & 0xff;
+		digest[i * 4] = (ctx->state[i]) & 0xff;
+		digest[i * 4 + 1] = (ctx->state[i] >> 8) & 0xff;
+		digest[i * 4 + 2] = (ctx->state[i] >> 16) & 0xff;
+		digest[i * 4 + 3] = (ctx->state[i] >> 24) & 0xff;
 	}
 
 	return (1);
 }
 
 
-void md5(const uint8_t *data, const size_t len, uint8_t hash[16])
+void md5(uint8_t digest[16], const uint8_t *data, const size_t len)
 {
 	t_md5_ctx ctx;
 
 	md5_init(&ctx);
 	md5_update(&ctx, data, len);
-	md5_final(hash, &ctx);
+	md5_final(digest, &ctx);
 }
 
 
@@ -184,7 +185,7 @@ int md5_update_wrap(void *ctx, const uint8_t *data, size_t len)
 }
 
 
-int md5_final_wrap(uint8_t hash[16], void *ctx)
+int md5_final_wrap(uint8_t digest[16], void *ctx)
 {
-	return (md5_final(hash, (t_md5_ctx *)ctx));
+	return (md5_final(digest, (t_md5_ctx *)ctx));
 }
