@@ -25,12 +25,12 @@ typedef struct s_sha256_ctx {
  * Prototypes
  */
 
-void sha256(uint8_t digest[32], const uint8_t *data, const size_t len);
+int sha256(uint8_t digest[32], const uint8_t *data, const size_t len);
 
-void sha256_init(t_sha256_ctx *ctx);
-void sha256_update(t_sha256_ctx *ctx, const uint8_t *data, const size_t len);
-void sha256_final(uint8_t digest[32], t_sha256_ctx *ctx);
+int sha256_init(t_sha256_ctx *ctx);
+int sha256_update(t_sha256_ctx *ctx, const uint8_t *data, const size_t len);
+int sha256_final(uint8_t digest[32], t_sha256_ctx *ctx);
 
-void sha256_init_wrap(void *ctx);
-void sha256_update_wrap(void *ctx, const uint8_t *data, const size_t len);
-void sha256_final_wrap(uint8_t digest[32], void *ctx);
+int sha256_init_wrap(void *ctx);
+int sha256_update_wrap(void *ctx, const uint8_t *data, const size_t len);
+int sha256_final_wrap(uint8_t digest[32], void *ctx);

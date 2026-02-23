@@ -10,6 +10,7 @@
 #include <stddef.h> // size_t
 #include "utils/list.h"
 #include "hash/md5.h"
+#include "hash/sha256.h"
 
 
 /*
@@ -52,7 +53,7 @@ typedef struct s_hash_algo {
 	const char *name;
 	int        (*init)(void *ctx);
 	int        (*update)(void *ctx, const uint8_t *data, size_t len);
-	int        (*final)(uint8_t *out, void *ctx);
+	int        (*final)(uint8_t *digest, void *ctx);
 	size_t     ctx_size;
 	size_t     digest_size;
 } t_hash_algo;
@@ -86,6 +87,14 @@ static const t_hash_algo g_hash_algos[] = {
 		md5_final_wrap,
 		sizeof(t_md5_ctx),
 		16
+	},
+	{
+		"sha256",
+		sha256_init_wrap,
+		sha256_update_wrap,
+		sha256_final_wrap,
+		sizeof(t_sha256_ctx),
+		32
 	},	{NULL, NULL, NULL, NULL, 0, 0}
 };
 

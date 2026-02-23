@@ -38,7 +38,7 @@ static const uint32_t K[64] = {
  * Functions
  */
 
-void sha256_init(t_sha256_ctx *ctx)
+int sha256_init(t_sha256_ctx *ctx)
 {
 	ctx->state[0] = 0x6a09e667;
 	ctx->state[1] = 0xbb67ae85;
@@ -51,6 +51,8 @@ void sha256_init(t_sha256_ctx *ctx)
 
 	ctx->bitlen = 0;
 	ctx->buffer_len = 0;
+
+	return (1);
 }
 
 
@@ -100,7 +102,7 @@ static void sha256_transform(t_sha256_ctx *ctx)
 }
 
 
-void sha256_update(t_sha256_ctx *ctx, const uint8_t *data, const size_t len)
+int sha256_update(t_sha256_ctx *ctx, const uint8_t *data, const size_t len)
 {
 	size_t i;
 
@@ -113,10 +115,12 @@ void sha256_update(t_sha256_ctx *ctx, const uint8_t *data, const size_t len)
 			ctx->buffer_len = 0;
 		}
 	}
+
+	return (1);
 }
 
 
-void sha256_final(uint8_t digest[32], t_sha256_ctx *ctx)
+int sha256_final(uint8_t digest[32], t_sha256_ctx *ctx)
 {
 	uint8_t i;
 
@@ -149,32 +153,36 @@ void sha256_final(uint8_t digest[32], t_sha256_ctx *ctx)
 		digest[i * 4 + 2] = (ctx->state[i] >> 8) & 0xff;
 		digest[i * 4 + 3] = (ctx->state[i]) & 0xff;
 	}
+
+	return (1);
 }
 
 
-void sha256(uint8_t digest[32], const uint8_t *data, const size_t len)
+int sha256(uint8_t digest[32], const uint8_t *data, const size_t len)
 {
 	t_sha256_ctx ctx;
 
 	sha256_init(&ctx);
 	sha256_update(&ctx, data, len);
 	sha256_final(digest, &ctx);
+
+	return (1);
 }
 
 
-void sha256_init_wrap(void *ctx)
+int sha256_init_wrap(void *ctx)
 {
 	return (sha256_init((t_sha256_ctx *)ctx));
 }
 
 
-void sha256_update_wrap(void *ctx, const uint8_t *data, const size_t len)
+int sha256_update_wrap(void *ctx, const uint8_t *data, const size_t len)
 {
 	return (sha256_update((t_sha256_ctx *)ctx, data, len));
 }
 
 
-void sha256_final_wrap(uint8_t digest[32], void *ctx)
+int sha256_final_wrap(uint8_t digest[32], void *ctx)
 {
 	return (sha256_final(digest, (t_sha256_ctx *)ctx));
 }

@@ -25,7 +25,7 @@ typedef struct s_md5_ctx {
  * Prototypes
  */
 
-void md5(uint8_t digest[16], const uint8_t *data, const size_t len);
+int md5(uint8_t digest[16], const uint8_t *data, const size_t len);
 
 int md5_init(t_md5_ctx *ctx);
 int md5_update(t_md5_ctx *ctx, const uint8_t *data, const size_t len);

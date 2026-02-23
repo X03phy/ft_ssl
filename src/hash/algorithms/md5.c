@@ -163,13 +163,15 @@ int md5_final(uint8_t digest[16], t_md5_ctx *ctx)
 }
 
 
-void md5(uint8_t digest[16], const uint8_t *data, const size_t len)
+int md5(uint8_t digest[16], const uint8_t *data, const size_t len)
 {
 	t_md5_ctx ctx;
 
 	md5_init(&ctx);
 	md5_update(&ctx, data, len);
 	md5_final(digest, &ctx);
+
+	return (1);
 }
 
 
