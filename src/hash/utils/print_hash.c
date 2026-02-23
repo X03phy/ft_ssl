@@ -1,6 +1,7 @@
 #include "hash/hash.h"
-#include <stddef.h> // size_t
-#include <stdio.h>  // printf()
+
+#include <stddef.h>  // size_t
+#include <stdio.h>   // printf()
 
 
 /*
@@ -18,7 +19,7 @@ static void print_hex(uint8_t *digest, size_t size)
 }
 
 
-void print_hash(t_hash_ctx *ctx, t_hash_input *input, uint8_t *digest)
+void print_hash(uint8_t *digest, t_hash_ctx *ctx, t_hash_input *input)
 {
 	if (ctx->flags & (1 << FLAG_Q)) {
 		print_hex(digest, ctx->algo->digest_size);
@@ -33,6 +34,8 @@ void print_hash(t_hash_ctx *ctx, t_hash_input *input, uint8_t *digest)
 			printf(" \"%s\"", input->data);
 		else if (input->type == HASH_INPUT_FILE)
 			printf(" %s", input->data);
+		else if (input->type == HASH_INPUT_STDIN)
+			printf(" stdin");
 
 		printf("\n");
 		return ;
@@ -42,7 +45,7 @@ void print_hash(t_hash_ctx *ctx, t_hash_input *input, uint8_t *digest)
 		printf("%s(%s) = ", ctx->algo->name, input->data);
 	else if (input->type == HASH_INPUT_STRING)
 		printf("%s(\"%s\") = ", ctx->algo->name, input->data);
-	else
+	else if (input->type == HASH_INPUT_STDIN)
 		printf("(stdin) = ");
 
 	print_hex(digest, ctx->algo->digest_size);

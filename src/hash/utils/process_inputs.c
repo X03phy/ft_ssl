@@ -1,19 +1,21 @@
 #include "hash/hash.h"
+
 #include "utils/str.h"
-#include <stdint.h> // uintX_t
-#include <unistd.h> // ssize_t, read(), close()
-#include <fcntl.h>  // open(), O_RDONLY
-#include <stdio.h>  // perror()
-#include <stddef.h> // size_t
-#include <string.h> // strlen()
-#include <stdlib.h> // malloc(), free()
+
+#include <stdint.h>  // uintX_t
+#include <unistd.h>  // ssize_t, read(), close()
+#include <fcntl.h>   // open(), O_RDONLY
+#include <stdio.h>   // perror()
+#include <stddef.h>  // size_t
+#include <string.h>  // strlen()
+#include <stdlib.h>  // malloc(), free()
 
 
 /*
  * Macros
  */
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 1024  //! Has to be a multiple of 64
 
 
 /*
@@ -80,7 +82,7 @@ static int process_stdin(t_hash_ctx *hctx)
     hctx->algo->update(hctx->algo_ctx, (uint8_t *)line, total_len);
     hctx->algo->final(digest, hctx->algo_ctx);
     t_hash_input inpu = { HASH_INPUT_STDIN, "stdin" };
-    print_hash(hctx, &inpu, digest);
+    print_hash(digest, hctx, &inpu);
 
     free(line);
     free(digest);
@@ -167,7 +169,7 @@ int process_inputs(t_hash_ctx *hctx)
 			return (0);
 
 		hctx->algo->final(digest, hctx->algo_ctx);
-		print_hash(hctx, input, digest);
+		print_hash(digest, hctx, input);
 
 		node = node->next;
 	}

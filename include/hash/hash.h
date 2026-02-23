@@ -65,16 +65,16 @@ typedef struct s_hash_algo {
 typedef struct s_hash_input
 {
 	e_hash_input_type type;
-	char              *data; // string ou filename
+	char              *data;  // string or filename
 }   t_hash_input;
 
 
 typedef struct s_hash_ctx
 {
 	const t_hash_algo *algo;
-	void              *algo_ctx; // contexte réel (md5/sha256)
-	int               flags;     // -p -q -r -s
-	t_list            *inputs; // flags arguments and files
+	void              *algo_ctx;  // contexte réel (md5/sha256)
+	int               flags;      // -p -q -r -s
+	t_list            *inputs;    // flags arguments and files
 } t_hash_ctx;
 
 
@@ -115,10 +115,8 @@ static const t_hash_algo g_hash_algos[] = {
  * Prototypes
  */
 
-/* hash_main.c */
 int hash_main(int argc, char **argv);
 
-/* parse_input */
-void print_hash(t_hash_ctx *ctx, t_hash_input *input, uint8_t *digest);
-int process_inputs(t_hash_ctx *hctx);
-int parse_inputs(t_hash_ctx *hctx, int argc, char **argv);
+int  parse_inputs(t_hash_ctx *hctx, int argc, char **argv);
+int  process_inputs(t_hash_ctx *hctx);
+void print_hash(uint8_t *digest, t_hash_ctx *ctx, t_hash_input *input);
