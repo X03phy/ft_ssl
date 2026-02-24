@@ -26,6 +26,9 @@ static int process_stdin(uint8_t *digest, t_hash_ctx *ctx)
 	uint8_t	     buffer[BUFFER_SIZE];
 	t_hash_input input;
 
+	if (!ctx->algo->init(ctx->algo_ctx))
+		return (0);
+
 	while ((bytes_read = read(STDIN_FILENO, buffer, BUFFER_SIZE)) > 0) {
 		if (!ctx->algo->update(ctx->algo_ctx, buffer, bytes_read))
 			return (0);
@@ -36,7 +39,8 @@ static int process_stdin(uint8_t *digest, t_hash_ctx *ctx)
 		return (0);
 	}
 
-	ctx->algo->final(digest, ctx->algo_ctx);
+	if (!ctx->algo->final(digest, ctx->algo_ctx))
+		return (0);
 
 	input.type = HASH_INPUT_STDIN;
 	input.data = "stdin";
@@ -76,7 +80,7 @@ static int process_file(t_hash_ctx *ctx, const char *filename)
 }
 
 
-static int process_string(t_hash_ctx *hctx, const char *str) // check update
+static int process_string(t_hash_ctx *hctx, const char *str)
 {
 	size_t len;
 
@@ -103,9 +107,9 @@ static int process_input_dispatch(t_hash_ctx *hctx, t_hash_input *input)
 
 int process_inputs(t_hash_ctx *ctx)
 {
+	uint8_t      *digest;
 	t_list       *node;
 	t_hash_input *input;
-	uint8_t      *digest;
 
 	digest = malloc(ctx->algo->digest_size);
 	if (!digest) {
@@ -115,20 +119,22 @@ int process_inputs(t_hash_ctx *ctx)
 
 	node = ctx->inputs;
 	if ((ctx->flags & (1 << FLAG_P)) || !node) {
-		ctx->algo->init(ctx->algo_ctx);
-		if (!process_stdin(digest, ctx))
+		if (!process_stdin(digest, ctx)) {
+			free(digest);
 			return (0);
+		}
 	}
 
 	while (node) {
 		input = (t_hash_input *)node->data;
 
-		ctx->algo->init(ctx->algo_ctx);
-		if (!process_input_dispatch(ctx, input)) {
+		if (!ctx->algo->init(ctx->algo_ctx) ||
+		    !process_input_dispatch(ctx, input) ||
+		    !ctx->algo->final(digest, ctx->algo_ctx)) {
 			free(digest);
 			return (0);
 		}
-		ctx->algo->final(digest, ctx->algo_ctx);
+
 		print_hash(digest, ctx, input);
 
 		node = node->next;
