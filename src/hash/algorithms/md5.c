@@ -62,7 +62,7 @@ int md5_init(t_md5_ctx *ctx)
 	ctx->bitlen = 0;
 	ctx->buffer_len = 0;
 
-	return (0);
+	return (1);
 }
 
 
