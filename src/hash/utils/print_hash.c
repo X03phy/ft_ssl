@@ -19,7 +19,7 @@ static void print_hex(uint8_t *digest, size_t size)
 }
 
 
-void print_hash(uint8_t *digest, t_hash_ctx *ctx, t_hash_input *input)
+void print_digest(uint8_t *digest, t_hash_ctx *ctx, t_hash_input *input)
 {
 	if (ctx->flags & (1 << FLAG_Q)) {
 		print_hex(digest, ctx->algo->digest_size);

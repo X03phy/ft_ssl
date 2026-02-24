@@ -119,4 +119,4 @@ int hash_main(int argc, char **argv);
 
 int  parse_inputs(t_hash_ctx *hctx, int argc, char **argv);
 int  process_inputs(t_hash_ctx *hctx);
-void print_hash(uint8_t *digest, t_hash_ctx *ctx, t_hash_input *input);
+void print_digest(uint8_t *digest, t_hash_ctx *ctx, t_hash_input *input);

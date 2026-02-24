@@ -44,7 +44,7 @@ static int process_stdin(uint8_t *digest, t_hash_ctx *ctx)
 
 	input.type = HASH_INPUT_STDIN;
 	input.data = "stdin";
-	print_hash(digest, ctx, &input);
+	print_digest(digest, ctx, &input);
 
 	return (1);
 }
@@ -135,7 +135,7 @@ int process_inputs(t_hash_ctx *ctx)
 			return (0);
 		}
 
-		print_hash(digest, ctx, input);
+		print_digest(digest, ctx, input);
 
 		node = node->next;
 	}
