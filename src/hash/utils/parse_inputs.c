@@ -56,8 +56,7 @@ static int add_input(t_hash_ctx *ctx, const e_hash_input_type type, char *data)
 
 static void print_error(const char *format, char **argv, int i)
 {
-	fprintf(stderr, format,
-	        argv[0], argv[1], argv[i]);
+	fprintf(stderr, format, argv[0], argv[1], argv[i]);
 	fprintf(stderr, "\n");
 	fprintf(stderr, HASH_HELP_FORMAT, argv[0], argv[1]);
 }
