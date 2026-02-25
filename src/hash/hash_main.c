@@ -31,7 +31,7 @@ static const t_hash_algo *get_hash_algo(const char *name)
 		i += 1;
 	}
 
-	return (NULL); // This should not happen
+	return (NULL);  // This should not happen
 }
 
 
@@ -42,7 +42,7 @@ int hash_main(int argc, char **argv)
 
 	memset(&hctx, 0, sizeof(hctx));
 
-	hctx.algo = get_hash_algo(argv[1]); // Does not have to be secured
+	hctx.algo = get_hash_algo(argv[1]);  // Does not have to be secured
 	if (!hctx.algo) {
 		fprintf(stderr, HASH_UNKNOWN_ALGO_FORMAT, argv[0], argv[1]);
 		fprintf(stderr, "\n");
@@ -55,7 +55,7 @@ int hash_main(int argc, char **argv)
 		return (0);
 	}
 
-	if (hctx.flags & (1 << FLAG_H)) { // Add is flag active
+	if (hctx.flags & (1 << FLAG_H)) {  // Add is flag active
 		printf(HASH_HELP_FORMAT, argv[0], argv[1]);
 		ret = 1;
 		goto cleanup;
