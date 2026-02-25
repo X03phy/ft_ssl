@@ -55,6 +55,7 @@ static int process_file(t_hash_ctx *ctx, const char *filename)
 	int     fd;
 	ssize_t bytes_read;
 	uint8_t buffer[BUFFER_SIZE];
+	int     ret;
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0) {
@@ -64,19 +65,21 @@ static int process_file(t_hash_ctx *ctx, const char *filename)
 
 	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0) {
 		if (!ctx->algo->update(ctx->algo_ctx, buffer, bytes_read)) {
-			close(fd);
-			return (0);
+			ret = 0;
+			goto cleanup;
 		}
 	}
 
 	if (bytes_read < 0) {
 		perror("read() failed");
-		close(fd);
-		return (0);
+		ret = 0;
+		goto cleanup;
 	}
 
+	ret = 1;
+cleanup:
 	close(fd);
-	return (1);
+	return (ret);
 }
 
 
@@ -95,12 +98,10 @@ static int process_string(t_hash_ctx *hctx, const char *str)
 static int process_input_dispatch(t_hash_ctx *hctx, t_hash_input *input)
 {
 	switch (input->type) {
-		case HASH_INPUT_FILE:
-			return (process_file(hctx, input->data));
 		case HASH_INPUT_STRING:
 			return (process_string(hctx, input->data));
-		default:
-			return (0); // This should not happen
+		default:  // HASH_INPUT_FILE
+			return (process_file(hctx, input->data));
 	}
 }
 
@@ -110,6 +111,7 @@ int process_inputs(t_hash_ctx *ctx)
 	uint8_t      *digest;
 	t_list       *node;
 	t_hash_input *input;
+	int          ret;
 
 	digest = malloc(ctx->algo->digest_size);
 	if (!digest) {
@@ -120,8 +122,8 @@ int process_inputs(t_hash_ctx *ctx)
 	node = ctx->inputs;
 	if ((ctx->flags & (1 << FLAG_P)) || !node) {
 		if (!process_stdin(digest, ctx)) {
-			free(digest);
-			return (0);
+			ret = 0;
+			goto cleanup;
 		}
 	}
 
@@ -131,8 +133,8 @@ int process_inputs(t_hash_ctx *ctx)
 		if (!ctx->algo->init(ctx->algo_ctx) ||
 		    !process_input_dispatch(ctx, input) ||
 		    !ctx->algo->final(digest, ctx->algo_ctx)) {
-			free(digest);
-			return (0);
+			ret = 0;
+			goto cleanup;
 		}
 
 		print_digest(digest, ctx, input);
@@ -140,6 +142,8 @@ int process_inputs(t_hash_ctx *ctx)
 		node = node->next;
 	}
 
+	ret = 1;
+cleanup:
 	free(digest);
-	return (1);
+	return (ret);
 }

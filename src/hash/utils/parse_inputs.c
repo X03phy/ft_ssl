@@ -67,7 +67,6 @@ static int parse_flag(t_hash_ctx *ctx, int *i, int argc, char **argv)
 	if (strcmp("-h", argv[*i]) == 0 ||
 	    strcmp("--help", argv[*i]) == 0) {
 		ctx->flags |= 1 << FLAG_H;
-		return (1);
 	} else if ((strcmp("-p", argv[*i]) == 0) ||
 	           (strcmp("--append", argv[*i]) == 0)) {
 		ctx->flags |= 1 << FLAG_P;
