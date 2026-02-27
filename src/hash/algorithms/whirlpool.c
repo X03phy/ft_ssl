@@ -1,6 +1,8 @@
 #include "hash/whirlpool.h"
 
+#include <stdint.h>  // uintX_t
 #include <string.h>  // memset()
+#include <stddef.h>  // size_t
 
 
 /*

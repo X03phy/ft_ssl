@@ -2,8 +2,8 @@
 
 #include "utils/colors.h"
 
-#include <string.h>  // strcmp(), memset()
-#include <stdio.h>   // NULL, fprintf, stderr, printf()
+#include <string.h>  // strcmp(), NULL, memset()
+#include <stdio.h>   // fprintf, stderr, printf()
 #include <stdlib.h>  // free(), malloc()
 
 
