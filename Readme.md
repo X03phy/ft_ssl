@@ -1,7 +1,7 @@
-# ft_ssl
+# ssl
 Writing your own cryptographic library in C (a bit like OpenSSL)
 
-x03phy@x03phy-MacBookPro:~/Bureau/ft_ssl$ openssl base64 
+x03phy@x03phy-MacBookPro:~/Bureau/ssl$ openssl base64 
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh
 YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFh

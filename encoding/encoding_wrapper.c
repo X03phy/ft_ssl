@@ -1,4 +1,4 @@
-#include "ft_ssl.h"
+#include "ssl.h"
 
 /* For open() */
 #include <fcntl.h>
@@ -52,7 +52,7 @@ static int parse_input( int argc, char **argv, t_ssl_encoding_ctx *ctx )
 			{
 				if ( i + 1 >= argc )
 				{
-					ft_putstr_fd( "ft_ssl: option requires an argument -- s\n", 2 );
+					ft_putstr_fd( "ssl: option requires an argument -- s\n", 2 );
 					print_help();
 					return ( 0 );
 				}
@@ -69,7 +69,7 @@ static int parse_input( int argc, char **argv, t_ssl_encoding_ctx *ctx )
 			{
 				if ( i + 1 >= argc )
 				{
-					ft_putstr_fd( "ft_ssl: option requires an argument\n", 2 );
+					ft_putstr_fd( "ssl: option requires an argument\n", 2 );
 					print_help();
 					return ( 0 );
 				}
