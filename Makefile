@@ -1,4 +1,4 @@
-NAME := ssl
+NAME := ft_ssl
 
 CC := cc
 CFLAGS := -Wall -Wextra -Werror
