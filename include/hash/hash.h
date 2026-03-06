@@ -26,8 +26,7 @@
 #define FLAG_R 3
 
 #define HASH_HELP_FORMAT \
-BOLD CYN "Usage:\n" RST \
-"  %s %s [flags] [files]\n" \
+BOLD CYN "Usage:" RST " %s %s [flags] [files]\n" \
 BOLD CYN "\nFlags:\n" RST \
 "  -h, --help          Display this help message and exit\n" \
 "  -p, --append        Read from STDIN, echo to STDOUT and append digest\n" \
@@ -65,16 +64,16 @@ typedef struct s_hash_algo {
 typedef struct s_hash_input
 {
 	e_hash_input_type type;
-	char              *data;  // string or filename
+	char              *data;
 }   t_hash_input;
 
 
 typedef struct s_hash_ctx
 {
 	const t_hash_algo *algo;
-	void              *algo_ctx;  // contexte réel (md5/sha256)
-	int               flags;      // -p -q -r -s
-	t_list            *inputs;    // flags arguments and files
+	void              *algo_ctx;
+	int               flags;
+	t_list            *inputs;
 } t_hash_ctx;
 
 
