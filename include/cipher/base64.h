@@ -1,12 +1,17 @@
 #pragma once
 
-/* For uintX_t */
-#include <stdint.h>
 
-/* For size_t */
-#include <stddef.h>
+/*
+ * Includes
+ */
+
+#include <stdint.h>  // uintX_t
+#include <stddef.h>  // size_t
 
 
-/* Prototypes */
-void base64_encode( const uint8_t *data, size_t len, uint8_t *ciphertext );
-int base64_decode( const uint8_t *ciphertext, size_t len, uint8_t *plaintext );
+/*
+ * Prototypes
+ */
+
+int base64_encode(uint8_t *ciphertext, const size_t len, const uint8_t *plaintext);
+int base64_decode(uint8_t *plaintext, const size_t len, const uint8_t *ciphertext);
