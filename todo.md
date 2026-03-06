@@ -20,3 +20,5 @@ potentially add more error messages
 
 check norm
 funcheck
+
+Comments : add functions' files in .h. Ex /* file.c */
