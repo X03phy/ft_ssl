@@ -1,4 +1,4 @@
-#include "cipher/rc4.h"
+//#include "cipher/rc4.h"
 
 
 typedef struct s_rc4_ctx {
@@ -11,7 +11,7 @@ int rc4_init(t_rc4_ctx *ctx, const uint8_t *key, size_t len)
 {
 	uint8_t *S;
 	uint8_t i, j, tmp;
-	size_t k;
+	size_t  k;
 
 	S = ctx->S;
 	ctx->x = 0;
@@ -22,7 +22,7 @@ int rc4_init(t_rc4_ctx *ctx, const uint8_t *key, size_t len)
 
 	for (i = j = k = 0; i < 256; i += 1) {
 		tmp = S[i];
-		j = (key[k] + tmp + j) & 0xff;
+		j = (j + tmp + key[k]) & 0xff;
 		if (++k == len)
 			k = 0;
 		S[i] = S[j];
@@ -31,8 +31,14 @@ int rc4_init(t_rc4_ctx *ctx, const uint8_t *key, size_t len)
 }
 
 
-int rc4_crypt(uint8_t *outdata, const uint8_t *indata, )
+int rc4_crypt(uint8_t *out, t_rc4_ctx *ctx, const uint8_t *in, size_t len)
 {
+	uint8_t *S;
+	uint8_t x, y;
+
+	x = ctx->x;
+	y = ctx->y;
+	S = ctx->S;
 
 	return (1);
 }
