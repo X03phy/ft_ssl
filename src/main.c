@@ -16,9 +16,8 @@ RED \
 RST
 
 #define HELP_FORMAT \
-BOLD CYN "Usage:\n" RST \
-"  %s [command] [flags] [files]\n" \
-BOLD CYN "\nMessage digest commands:\n" RST \
+BOLD CYN "Usage:" RST " %s [command] [flags] [files]\n" \
+BOLD CYN "\nMessage Digest commands:\n" RST \
 "  md5\n" \
 "  sha256\n" \
 "  whirlpool\n" \
