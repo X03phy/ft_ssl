@@ -18,20 +18,16 @@
 
 static const uint8_t BASE64_ENCODING_TABLE[64] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-// static const int BASE64_DECODING_TABLE[132] = {
-// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0-11
-// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 12-23
-// 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 24-35
-// 	-1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, // 36-47
-// 	52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -2, // 48-59
-// 	-1,  0, -1, -1, -1,  0,  1,  2,  3,  4,  5,  6, // 60-71
-// 	7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, // 72-83
-// 	19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, // 84-95
-// 	-1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, // 96-107
-// 	37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, // 108-119
-// 	49, 50, 51, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 120-131
-// };
-
+static const uint8_t BASE64_DECODING_TABLE[128] = {
+	80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80,  // 0 - 15
+	80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80,  // 16 - 31
+	80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 62, 80, 80, 80, 63,  // 32 - 47
+	52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 80, 80, 80, 64, 80, 80,  // 48 - 63
+	80,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,  // 64 - 79
+	15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 80, 80, 80, 80, 80,  // 80 - 96
+	80, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,  // 87 - 111
+	41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 80, 80, 80, 80, 80   // 112 - 127
+};
 
 /*
  * Functions
@@ -41,6 +37,14 @@ int base64_encode(uint8_t *ciphertext, const uint8_t *plaintext, const size_t le
 {
 	size_t idx, i, j;
 
+	if (!ciphertext || !plaintext)
+		return (0);
+
+	if (len == 0) {
+		ciphertext[0] = '\0';
+		return (1);
+	}
+
 	idx = (len / 3) * 3;
 	for (i = 0, j = 0; i < idx; i += 3, j += 4) {
 		ciphertext[j] = BASE64_ENCODING_TABLE[plaintext[i] >> 2];
@@ -49,7 +53,7 @@ int base64_encode(uint8_t *ciphertext, const uint8_t *plaintext, const size_t le
 		ciphertext[j + 3] = BASE64_ENCODING_TABLE[plaintext[i + 2] & 0x3F];
 	}
 
-	switch (len % 3) {
+	switch (len - i) {
 	case 1:
 		ciphertext[j] = BASE64_ENCODING_TABLE[plaintext[i] >> 2];
 		ciphertext[j + 1] = BASE64_ENCODING_TABLE[(plaintext[i] & 0x03) << 4];
@@ -71,14 +75,39 @@ int base64_encode(uint8_t *ciphertext, const uint8_t *plaintext, const size_t le
 }
 
 
-#include <string.h>
+int base64_decode(uint8_t *plaintext, const uint8_t *ciphertext, const size_t len)
+{
+	size_t idx, i;
+	bool    = false;
+
+	if (len == 0) {
+		plaintext[0] = '\0';
+		return (1);
+	}
+
+	if (!((len >> 1) & 0x2)) {
+		return (1);
+	}
+
+	if (ciphertext[len - 1] == BASE64_PADDING) {
+		idx = (len / 4) * 4
+	} else {
+		idx = (len / 4) * 4
+	}
+	for (i = 0, i < len, i++) {
+
+	}
+
+}
+
+
 int main()
 {
 	uint8_t plaintext1[] = "a";
-	uint8_t plaintext2[] = "ab";
+	uint8_t plaintext2[] = "abcd";
 	uint8_t ciphertext[50];
 	base64_encode(ciphertext, plaintext1, 1);
 	printf("%s\n", ciphertext);
-	base64_encode(ciphertext, plaintext2, 2);
+	base64_encode(ciphertext, plaintext2, 4);
 	printf("%s\n", ciphertext);
 }
