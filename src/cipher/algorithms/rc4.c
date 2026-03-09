@@ -1,20 +1,17 @@
-//#include "cipher/rc4.h"
+#include "cipher/rc4.h"
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
+#include <stdint.h>  // uintX_t
+#include <stddef.h>  // size_t
 
 
-typedef struct s_rc4_ctx {
-	uint8_t x, y;
-	uint8_t S[256];
-} t_rc4_ctx;
-
+/*
+ * Functions
+ */
 
 int rc4_init(t_rc4_ctx *ctx, const uint8_t *key, const size_t len)
 {
 	uint8_t *S;
-	size_t i;
+	size_t  i;
 	uint8_t j, tmp;
 	size_t  k;
 
@@ -45,7 +42,7 @@ int rc4_crypt(uint8_t *out, t_rc4_ctx *ctx, const uint8_t *in, const size_t len)
 {
 	uint8_t *S;
 	uint8_t x, y, tx, ty;
-	size_t i;
+	size_t  i;
 
 	if (!out || !ctx || !in)
 		return (0);
@@ -68,25 +65,4 @@ int rc4_crypt(uint8_t *out, t_rc4_ctx *ctx, const uint8_t *in, const size_t len)
 	ctx->y = y;
 
 	return (1);
-}
-
-
-int main(void)
-{
-	uint8_t cipher[50];
-	uint8_t text[] = "Plaintext";
-	uint8_t *key = (uint8_t *)"Key";
-	t_rc4_ctx ctx;
-	size_t i;
-
-	rc4_init(&ctx, key, 3);
-
-	rc4_crypt(cipher, &ctx, text, 9);
-
-	printf("Cipher: ");
-	for (i = 0; i < 9; i++)
-		printf("%02x", cipher[i]);
-	printf("\n");
-
-	return (0);
 }
