@@ -38,7 +38,7 @@ int rc4_init(t_rc4_ctx *ctx, const uint8_t *key, const size_t len)
 }
 
 
-int rc4_crypt(uint8_t *out, t_rc4_ctx *ctx, const uint8_t *in, const size_t len)
+int rc4_crypt(t_rc4_ctx *ctx, uint8_t *out, const uint8_t *in, const size_t len)
 {
 	uint8_t *S;
 	uint8_t x, y, tx, ty;
@@ -65,4 +65,15 @@ int rc4_crypt(uint8_t *out, t_rc4_ctx *ctx, const uint8_t *in, const size_t len)
 	ctx->y = y;
 
 	return (1);
+}
+
+
+int rc4_init_wrap(void *ctx, const uint8_t *key, const size_t len)
+{
+	return (rc4_init((t_rc4_ctx *)ctx, key, len));
+}
+
+int rc4_crypt_wrap(void *ctx, uint8_t *out, const uint8_t *in, const size_t len)
+{
+	return (rc4_crypt((t_rc4_ctx *)ctx, out, in, len));
 }
