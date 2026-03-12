@@ -12,6 +12,7 @@
 
 #include "cipher/rc4.h"
 
+
 /*
  * Macros
  */
@@ -33,8 +34,8 @@
  */
 
 typedef enum e_cipher_input_type {
-	CIPHER_INPUT_STDIN,
-	CIPHER_INPUT_STRING,
+	//CIPHER_INPUT_STDIN,
+	//CIPHER_INPUT_STRING,
 	CIPHER_INPUT_FILE
 } e_cipher_input_type;
 
@@ -103,4 +104,5 @@ static const t_cipher_algo g_cipher_algos[] = {
  * Prototypes
  */
 
+/* cipher/cipher_main.c */
 int cipher_main(int argc, char **argv);
