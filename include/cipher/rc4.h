@@ -25,4 +25,7 @@ typedef struct s_rc4_ctx {
 
 /* cipher/algorithms/rc4.c */
 int rc4_init(t_rc4_ctx *ctx, const uint8_t *key, const size_t len);
-int rc4_crypt(uint8_t *out, t_rc4_ctx *ctx, const uint8_t *in, const size_t len);
+int rc4_crypt(t_rc4_ctx *ctx, uint8_t *out, const uint8_t *in, const size_t len);
+
+int rc4_init_wrap(void *ctx, const uint8_t *key, const size_t len);
+int rc4_crypt_wrap(void *ctx, uint8_t *out, const uint8_t *in, const size_t len);
