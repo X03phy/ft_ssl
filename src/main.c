@@ -21,8 +21,9 @@ BOLD CYN "\nMessage Digest commands:\n" RST \
 "  md5\n" \
 "  sha256\n" \
 "  whirlpool\n" \
-BOLD CYN "\nFlags:\n" RST \
-"  -p -q -r -s\n" \
+BOLD CYN "\nCipher commands:\n" RST \
+"  base64\n" \
+"  rc4\n" \
 "\n"
 
 
