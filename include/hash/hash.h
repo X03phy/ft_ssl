@@ -61,15 +61,13 @@ typedef struct s_hash_algo {
 } t_hash_algo;
 
 
-typedef struct s_hash_input
-{
+typedef struct s_hash_input {
 	e_hash_input_type type;
 	char              *data;
 }   t_hash_input;
 
 
-typedef struct s_hash_ctx
-{
+typedef struct s_hash_ctx {
 	const t_hash_algo *algo;
 	void              *algo_ctx;
 	int               flags;
