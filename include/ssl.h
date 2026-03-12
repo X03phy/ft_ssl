@@ -29,7 +29,7 @@ static const t_cmd g_cmds[] = {
 	{"sha256", hash_main},
 	{"whirlpool", hash_main},
 /* Cipher commands */
-	{"base64", cipher_main},
-	{"rc4", cipher_main},
+	// {"base64", cipher_main},
+	// {"rc4", cipher_main},
 	{NULL, NULL}
 };
