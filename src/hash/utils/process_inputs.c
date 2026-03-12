@@ -83,25 +83,25 @@ cleanup:
 }
 
 
-static int process_string(t_hash_ctx *hctx, const char *str)
+static int process_string(t_hash_ctx *ctx, const char *str)
 {
 	size_t len;
 
 	len = strlen(str);
-	if (!hctx->algo->update(hctx->algo_ctx, (const uint8_t *)str, len))
+	if (!ctx->algo->update(ctx->algo_ctx, (const uint8_t *)str, len))
 		return (0);
 
 	return (1);
 }
 
 
-static int process_input_dispatch(t_hash_ctx *hctx, t_hash_input *input)
+static int process_input_dispatch(t_hash_ctx *ctx, t_hash_input *input)
 {
 	switch (input->type) {
 		case HASH_INPUT_STRING:
-			return (process_string(hctx, input->data));
+			return (process_string(ctx, input->data));
 		default:  // HASH_INPUT_FILE
-			return (process_file(hctx, input->data));
+			return (process_file(ctx, input->data));
 	}
 }
 

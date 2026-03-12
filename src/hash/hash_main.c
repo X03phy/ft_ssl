@@ -37,41 +37,41 @@ static const t_hash_algo *get_hash_algo(const char *name)
 
 int hash_main(int argc, char **argv)
 {
-	t_hash_ctx hctx;
+	t_hash_ctx ctx;
 	int        ret;
 
-	memset(&hctx, 0, sizeof(hctx));
+	memset(&ctx, 0, sizeof(ctx));
 
-	hctx.algo = get_hash_algo(argv[1]);  // Does not have to be secured
-	if (!hctx.algo) {
+	ctx.algo = get_hash_algo(argv[1]);  // Does not have to be secured
+	if (!ctx.algo) {
 		fprintf(stderr, HASH_UNKNOWN_ALGO_FORMAT, argv[0], argv[1]);
 		fprintf(stderr, "\n");
 		fprintf(stderr, HASH_HELP_FORMAT, argv[0], argv[1]);
 		return (0);
 	}
 
-	if (!parse_inputs(&hctx, argc, argv)) {
-		list_clear(&hctx.inputs, free);
+	if (!parse_inputs(&ctx, argc, argv)) {
+		list_clear(&ctx.inputs, free);
 		return (0);
 	}
 
-	if (hctx.flags & (1 << FLAG_H)) {  // Add is flag active
+	if (ctx.flags & (1 << FLAG_H)) {  // Add is flag active
 		printf(HASH_HELP_FORMAT, argv[0], argv[1]);
 		ret = 1;
 		goto cleanup;
 	}
 
-	hctx.algo_ctx = malloc(hctx.algo->ctx_size);
-	if (!hctx.algo_ctx) {
+	ctx.algo_ctx = malloc(ctx.algo->ctx_size);
+	if (!ctx.algo_ctx) {
 		perror("malloc() failed");
 		ret = 0;
 		goto cleanup;
 	}
 
-	ret = process_inputs(&hctx);
+	ret = process_inputs(&ctx);
 
-	free(hctx.algo_ctx);
+	free(ctx.algo_ctx);
 cleanup:
-	list_clear(&hctx.inputs, free);
+	list_clear(&ctx.inputs, free);
 	return (ret);
 }
